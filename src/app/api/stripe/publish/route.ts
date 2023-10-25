@@ -1,8 +1,8 @@
 import { prisma } from "@/db";
 import { env } from "@/env.mjs";
+import { authOptions } from "@/lib/auth/options";
 import { APP_URL } from "@/lib/constants"
 import stripe, { getStripeCustomerId } from "@/lib/stripe";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 
