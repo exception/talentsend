@@ -9,6 +9,11 @@ import { PublicOfferType } from '@/app/app/offer/[id]/page';
 import BenefitRow from './benefit-row';
 import EquityRow from './equity-row';
 import CompanyRow from './company-row';
+import { useState } from 'react';
+import Modal from '../ui/modal';
+import { Button } from '../ui/button';
+import { trpc } from '@/lib/providers/trpc-provider';
+import { useToast } from '../ui/use-toast';
 
 interface PublicOfferViewProps {
     offer: PublicOfferType;
@@ -35,112 +40,159 @@ const PublicOfferView = ({
     showAcceptOffer = true,
 }: PublicOfferViewProps) => {
     const branding = BrandSchema.parse(offer.organization.brand ?? {});
+    const [accept, setAccept] = useState(false);
+    const { toast } = useToast();
+
+    const mutateOffer = trpc.offers.acceptOffer.useMutation({
+        onSuccess() {
+            setAccept(false);
+            toast({
+                title: 'Offer accepted!',
+                description: `We have let the team at ${offer.organization.name} know!`,
+            });
+        },
+    });
 
     const _offer = PartialOffer.parse(offer?.body ?? {});
 
     return (
-        <div className="flex flex-col bg-neutral-100 min-h-screen relative items-center pt-10 pb-24">
-            <div
-                className="h-[384px] w-full absolute top-0"
-                style={{
-                    backgroundColor: branding.primary,
-                }}
-            ></div>
-            <MaxWidthContainer className="z-10 flex items-center flex-col space-y-4">
-                <Image
-                    height={60}
-                    width={60}
-                    className="h-16 w-16"
-                    src={offer.organization.imageUrl!}
-                    alt={offer.organization.name}
-                />
-                <div className="rounded-xl bg-white shadow-md lg:p-8 p-4 flex flex-col w-full">
-                    <h1 className="text-lg lg:text-3xl font-semibold">
-                        Welcome to the team, {offer.targetFirstName}!
-                    </h1>
-                    <div className="flex flex-col lg:flex-row lg:justify-between space-y-2 lg:space-y-0 lg:space-x-2">
-                        <div className="flex flex-col my-2 justify-between">
-                            <p className="text-sm text-neutral-500">
-                                {_offer.introduction ??
-                                    'We’re excited for you to join the team. Please don’t hesitate to reach out if you have any questions about the offer, the role, or the company!'}
-                            </p>
-                            <div className="space-y-1 my-2">
-                                <p className="text-sm">
-                                    <span className="font-semibold">
-                                        Role:{' '}
-                                    </span>
-                                    {_offer.role}
-                                </p>
-                                {_offer.startDate && (
-                                    <p className="text-sm">
-                                        <span className="font-semibold">
-                                            Start Date:{' '}
-                                        </span>
-                                        {format(
-                                            _offer.startDate,
-                                            'MMM dd, yyyy',
-                                        )}
-                                    </p>
-                                )}
-                                {offer.expiresAt && (
-                                    <p className="text-sm">
-                                        <span className="font-semibold">
-                                            Offer Expires:{' '}
-                                        </span>
-                                        {format(
-                                            offer.expiresAt,
-                                            'MMM dd, yyyy',
-                                        )}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        {/* <div className="flex w-full lg:w-[800px] h-[300px] bg-black"></div> */}
-                    </div>
-                </div>
-                <CompensationRow
-                    comp={_offer.compensation}
-                    branding={branding}
-                    benefit={offer.benefitPackage ?? undefined}
-                    orgEquity={offer.organization.equity}
-                />
-                {_offer.compensation?.equity && offer.organization.equity && (
-                    <EquityRow
-                        equity={_offer.compensation.equity}
-                        orgEquity={offer.organization.equity}
-                        branding={branding}
-                    />
-                )}
-                <BenefitRow benefit={offer.benefitPackage ?? undefined} />
-                <CompanyRow organization={offer.organization} />
-            </MaxWidthContainer>
-            {showAcceptOffer && _offer.manager && (
-                <div className="fixed inset-x-0 bottom-0 flex h-20 flex-row justify-between bg-white border-t border-t-neutral-200 p-4 z-50">
-                    <div className="flex justify-between flex-col">
-                        <p className="text-sm font-medium">
-                            Questions about this offer?
-                        </p>
-                        <Link
-                            className="text-sm"
-                            style={{
-                                color: branding.secondary,
-                            }}
-                            href={`mailto:${_offer.manager.email}`}
-                        >
-                            Email {_offer.manager.name}
-                        </Link>
-                    </div>
-                    <button
-                        className="rounded-xl py-4 w-44 md:w-60 lg:w-[353px] items-center justify-center flex text-sm font-semibold shadow-sm text-white"
-                        style={{
-                            backgroundColor: branding.primary,
-                        }}
+        <>
+            <Modal open={accept} setOpen={setAccept}>
+                <h1 className="text-xl font-semibold">Verbally Accept Offer</h1>
+                <p className="text-neutral-400">
+                    Note, accepting this offer via TalentSend is not legally
+                    binding. This will indicate to your hiring manager that
+                    you&apos;ve accepted the offer and are ready for the legal
+                    offer letter.
+                </p>
+                <div className="mt-4 flex items-center flex-row justify-between space-x-2">
+                    <Button
+                        disabled={mutateOffer.isLoading}
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => setAccept(false)}
                     >
-                        Verbally Accept Offer
-                    </button>
+                        Cancel
+                    </Button>
+                    <Button
+                        className="w-full"
+                        loading={mutateOffer.isLoading}
+                        onClick={() =>
+                            mutateOffer.mutate({
+                                offerId: offer.id,
+                            })
+                        }
+                    >
+                        Accept
+                    </Button>
                 </div>
-            )}
-        </div>
+            </Modal>
+            <div className="flex flex-col bg-neutral-100 min-h-screen relative items-center pt-10 pb-24">
+                <div
+                    className="h-[384px] w-full absolute top-0"
+                    style={{
+                        backgroundColor: branding.primary,
+                    }}
+                ></div>
+                <MaxWidthContainer className="z-10 flex items-center flex-col space-y-4">
+                    <Image
+                        height={60}
+                        width={60}
+                        className="h-16 w-16"
+                        src={offer.organization.imageUrl!}
+                        alt={offer.organization.name}
+                    />
+                    <div className="rounded-xl bg-white shadow-md lg:p-8 p-4 flex flex-col w-full">
+                        <h1 className="text-lg lg:text-3xl font-semibold">
+                            Welcome to the team, {offer.targetFirstName}!
+                        </h1>
+                        <div className="flex flex-col lg:flex-row lg:justify-between space-y-2 lg:space-y-0 lg:space-x-2">
+                            <div className="flex flex-col my-2 justify-between">
+                                <p className="text-sm text-neutral-500">
+                                    {_offer.introduction ??
+                                        'We’re excited for you to join the team. Please don’t hesitate to reach out if you have any questions about the offer, the role, or the company!'}
+                                </p>
+                                <div className="space-y-1 my-2">
+                                    <p className="text-sm">
+                                        <span className="font-semibold">
+                                            Role:{' '}
+                                        </span>
+                                        {_offer.role}
+                                    </p>
+                                    {_offer.startDate && (
+                                        <p className="text-sm">
+                                            <span className="font-semibold">
+                                                Start Date:{' '}
+                                            </span>
+                                            {format(
+                                                _offer.startDate,
+                                                'MMM dd, yyyy',
+                                            )}
+                                        </p>
+                                    )}
+                                    {offer.expiresAt && (
+                                        <p className="text-sm">
+                                            <span className="font-semibold">
+                                                Offer Expires:{' '}
+                                            </span>
+                                            {format(
+                                                offer.expiresAt,
+                                                'MMM dd, yyyy',
+                                            )}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            {/* <div className="flex w-full lg:w-[800px] h-[300px] bg-black"></div> */}
+                        </div>
+                    </div>
+                    <CompensationRow
+                        comp={_offer.compensation}
+                        branding={branding}
+                        benefit={offer.benefitPackage ?? undefined}
+                        orgEquity={offer.organization.equity}
+                    />
+                    {_offer.compensation?.equity &&
+                        offer.organization.equity && (
+                            <EquityRow
+                                equity={_offer.compensation.equity}
+                                orgEquity={offer.organization.equity}
+                                branding={branding}
+                            />
+                        )}
+                    <BenefitRow benefit={offer.benefitPackage ?? undefined} />
+                    <CompanyRow organization={offer.organization} />
+                </MaxWidthContainer>
+                {showAcceptOffer && _offer.manager && (
+                    <div className="fixed inset-x-0 bottom-0 flex h-20 flex-row justify-between bg-white border-t border-t-neutral-200 p-4 z-50">
+                        <div className="flex justify-between flex-col">
+                            <p className="text-sm font-medium">
+                                Questions about this offer?
+                            </p>
+                            <Link
+                                className="text-sm"
+                                style={{
+                                    color: branding.secondary,
+                                }}
+                                href={`mailto:${_offer.manager.email}`}
+                            >
+                                Email {_offer.manager.name}
+                            </Link>
+                        </div>
+                        <button
+                            className="rounded-xl py-4 w-44 md:w-60 lg:w-[353px] items-center justify-center flex text-sm font-semibold shadow-sm text-white"
+                            style={{
+                                backgroundColor: branding.primary,
+                            }}
+                            disabled={offer.canSkipEmailConfirmation}
+                            onClick={() => setAccept(true)}
+                        >
+                            Verbally Accept Offer
+                        </button>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

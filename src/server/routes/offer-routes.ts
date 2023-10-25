@@ -50,7 +50,7 @@ export const offerRoutes = createTRPCRouter({
                         'role',
                         'startDate',
                     ]),
-                    status: isTeamPremium(organization) ? "DRAFT" : "PENDING", // draft = publishable, pending = needs payment
+                    status: isTeamPremium(organization) ? 'DRAFT' : 'PENDING', // draft = publishable, pending = needs payment
                     createdBy: {
                         connect: {
                             id: session.user.id,
@@ -149,6 +149,23 @@ export const offerRoutes = createTRPCRouter({
                 },
                 data: {
                     status: input.status,
+                },
+            });
+        }),
+    acceptOffer: publicProcedure
+        .input(
+            z.object({
+                offerId: z.string(),
+            }),
+        )
+        .mutation(({ ctx: { prisma }, input }) => {
+            // TODO SEND EMAIL
+            return prisma.offer.update({
+                where: {
+                    id: input.offerId,
+                },
+                data: {
+                    status: 'ACCEPTED',
                 },
             });
         }),
