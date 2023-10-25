@@ -15,9 +15,16 @@ const getOffer = cache(async (offerId: string) => {
         where: {
             id: offerId,
             status: 'PUBLISHED',
-            expiresAt: {
-                gt: new Date(),
-            },
+            OR: [
+                {
+                    expiresAt: null,
+                },
+                {
+                    expiresAt: {
+                        gt: new Date(),
+                    },
+                },
+            ],
         },
         include: {
             organization: {
