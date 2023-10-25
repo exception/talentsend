@@ -53,6 +53,18 @@ export const generateMetadata = async ({
 
     return {
         title: `${offer.organization.name} x Talentsend`,
+        description: `Here's your offer from ${offer.organization.name}`,
+        openGraph: {
+            title: `${offer.organization.name} x Talentsend`,
+            description: `Here's your offer from ${offer.organization.name}`,
+            images: `/api/offer/og/${offer.id}`,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${offer.organization.name} x Talentsend`,
+            description: `Here's your offer from ${offer.organization.name}`,
+            images: `/api/offer/og/${offer.id}`,
+        },
     };
 };
 
