@@ -14,13 +14,13 @@ export async function GET(request: NextRequest) {
     const offerId = searchParams.get('offerId');
 
     if (!offerId) {
-        return <></>;
+        return new ImageResponse(<></>);
     }
 
     const offer = await getOfferAndTeamViaEdge(offerId);
 
     if (!offer) {
-        return <></>;
+        return new ImageResponse(<></>);
     }
 
     return new ImageResponse(
