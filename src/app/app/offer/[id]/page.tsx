@@ -57,13 +57,13 @@ export const generateMetadata = async ({
         openGraph: {
             title: `${offer.organization.name} x Talentsend`,
             description: `Here's your offer from ${offer.organization.name}`,
-            images: `/api/offer/og/${offer.id}`,
+            images: `/api/offer/og?offerId=${offer.id}`,
         },
         twitter: {
             card: 'summary_large_image',
             title: `${offer.organization.name} x Talentsend`,
             description: `Here's your offer from ${offer.organization.name}`,
-            images: `/api/offer/og/${offer.id}`,
+            images: `/api/offer/og?offerid=${offer.id}`,
         },
     };
 };
