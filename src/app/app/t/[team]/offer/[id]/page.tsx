@@ -7,10 +7,20 @@ import { useTeam } from '../../layout';
 import SettingsContainer from '@/app/app/settings/settings-container';
 import MaxWidthContainer from '@/components/app/max-width-container';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Pencil, SendHorizonal, SparkleIcon, XIcon } from 'lucide-react';
+import {
+    Check,
+    Clipboard,
+    Pencil,
+    SendHorizonal,
+    SparkleIcon,
+    XIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import PublicOfferView from '@/components/views/public-offer';
 import { OfferStatus } from '@prisma/client';
+import { useToast } from '@/components/ui/use-toast';
+import { useState } from 'react';
+import { APP_URL } from '@/lib/constants';
 
 interface OfferPageProps {
     params: {
@@ -28,6 +38,8 @@ const canPublish = (status: OfferStatus) => {
 
 const OfferPage = ({ params }: OfferPageProps) => {
     const { team } = useTeam();
+    const { toast } = useToast();
+    const [copied, setCopied] = useState(false);
     const { data, isLoading, refetch } = trpc.offers.get.useQuery({
         offerId: params.id,
         orgId: team.id,
@@ -50,9 +62,36 @@ const OfferPage = ({ params }: OfferPageProps) => {
     return (
         <MaxWidthContainer className="py-5">
             <SettingsContainer
-                title={`Offer for ${data.targetName}`}
+                title={`Offer for ${data.targetFirstName} ${data.targetLastName}`}
                 renderChild={() => (
                     <div className="flex flex-row space-x-2">
+                        {canCancel(data.status) && (
+                            <Button
+                                onClick={async () => {
+                                    setCopied(true);
+                                    await navigator.clipboard.writeText(
+                                        `${APP_URL}/offer/${data.id}`,
+                                    );
+                                    toast({
+                                        title: 'Copied link to clipboard!',
+                                    });
+
+                                    setTimeout(() => {
+                                        setCopied(false);
+                                    }, 2500);
+                                }}
+                                variant="outline"
+                                icon={
+                                    copied ? (
+                                        <Check className="h-4 w-4" />
+                                    ) : (
+                                        <Clipboard className="h-4 w-4" />
+                                    )
+                                }
+                            >
+                                {copied ? 'Copied' : 'Copy'}
+                            </Button>
+                        )}
                         <Link
                             className={buttonVariants({ variant: 'outline' })}
                             href={`/t/${team.slug}/offer/${data.id}/edit`}

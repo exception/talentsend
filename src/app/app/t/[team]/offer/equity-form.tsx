@@ -106,7 +106,7 @@ const EquityForm = ({ form }: EquityForm) => {
                     />
                 </div>
             )}
-            {equity.preferred?.issue_price && (
+            {equity.preferred?.issue_price && equityAmount > 0 && (
                 <div className="flex items-center justify-between flex-row">
                     <p className="text-sm font-medium">Equity Value</p>
                     <p className="text-sm font-normal text-neutral-400">

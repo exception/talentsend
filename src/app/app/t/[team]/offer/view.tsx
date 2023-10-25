@@ -35,8 +35,11 @@ const OfferView = ({ offer }: OfferPageProps) => {
     const form = useForm<OfferSchema>({
         resolver: zodResolver(OfferSchema),
         defaultValues: {
-            candidateEmail: offer?.targetEmail,
-            candidateName: offer?.targetName,
+            candidate: {
+                email: offer?.targetEmail,
+                firstName: offer?.targetFirstName,
+                lastName: offer?.targetLastName,
+            },
             compensation: _offer.compensation,
             expiryDate: offer?.expiresAt ?? undefined,
             introduction: _offer.introduction,
@@ -109,7 +112,7 @@ const OfferView = ({ offer }: OfferPageProps) => {
                         editOfferMutation.isLoading
                     }
                 >
-                    {offer ? 'Edit' : 'Send'}
+                    {offer ? 'Edit' : 'Create'}
                 </Button>
             </div>
             <div className="w-full rounded-b-md border border-neutral-300 bg-neutral-50 border-t-0 border-dashed p-4">

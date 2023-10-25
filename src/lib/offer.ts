@@ -26,8 +26,11 @@ export const CompensationSchema = z.object({
     })
 
 export const OfferSchema = z.object({
-    candidateName: z.string(),
-    candidateEmail: z.string().email(),
+    candidate: z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        email: z.string().email()
+    }),
     role: z.string(),
     introduction: z.string().optional(),
     startDate: z.coerce.date().optional(),

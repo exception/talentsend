@@ -21,10 +21,6 @@ const BrandSchema = z.object({
     secondary: z.string().optional().default('#000000'),
 });
 
-const firstName = (name: string) => {
-    return first(name.split(' '));
-};
-
 const PartialOffer = OfferSchema.pick({
     compensation: true,
     introduction: true,
@@ -61,7 +57,7 @@ const PublicOfferView = ({
                 />
                 <div className="rounded-xl bg-white shadow-md lg:p-8 p-4 flex flex-col w-full">
                     <h1 className="text-lg lg:text-3xl font-semibold">
-                        Welcome to the team, {firstName(offer.targetName)}!
+                        Welcome to the team, {offer.targetFirstName}!
                     </h1>
                     <div className="flex flex-col lg:flex-row lg:justify-between space-y-2 lg:space-y-0 lg:space-x-2">
                         <div className="flex flex-col my-2 justify-between">

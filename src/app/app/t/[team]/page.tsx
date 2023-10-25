@@ -1,11 +1,10 @@
 'use client';
 
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { ChevronRight, Pencil, Plus, SendHorizonal } from 'lucide-react';
+import { Pencil, Plus, SendHorizonal } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { Offer, Organization } from '@prisma/client';
 import { useTeam } from './layout';
 import Link from 'next/link';
@@ -31,7 +30,7 @@ const NoOrganization = () => {
                 className={buttonVariants({ variant: 'default', size: 'sm' })}
             >
                 <SendHorizonal className="h-4 w-4" />
-                Send an offer
+                Create an offer
             </Link>
         </div>
     );
@@ -104,7 +103,8 @@ const CardContent = ({
                         <tr key={offer.id}>
                             <td className="whitespace-nowrap py-5 px-3 text-sm sm:pl-0">
                                 <p className="font-medium text-gray-900">
-                                    {offer.targetName}
+                                    {offer.targetFirstName}{' '}
+                                    {offer.targetLastName}
                                 </p>
                             </td>
                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">

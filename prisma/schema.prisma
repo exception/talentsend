@@ -120,9 +120,10 @@ enum OfferStatus {
 model Offer {
   id String @id @default(cuid())
 
-  targetName  String
-  targetEmail String
-  status      OfferStatus @default(PENDING)
+  targetFirstName String      @default("")
+  targetLastName  String      @default("")
+  targetEmail     String
+  status          OfferStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   body      Json

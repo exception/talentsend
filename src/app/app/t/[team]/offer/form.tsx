@@ -61,14 +61,14 @@ const OfferForm = ({ form, handleSubmit }: FormProps) => {
                     <div className="flex flex-col lg:flex-row lg:gap-x-2">
                         <FormField
                             control={form.control}
-                            name="candidateName"
+                            name="candidate.firstName"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Candidate Name</FormLabel>
+                                    <FormLabel>Candidate First Name</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            placeholder={`John Doe`}
+                                            placeholder={`John`}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -77,14 +77,14 @@ const OfferForm = ({ form, handleSubmit }: FormProps) => {
                         />
                         <FormField
                             control={form.control}
-                            name="candidateEmail"
+                            name="candidate.lastName"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Candidate Email</FormLabel>
+                                    <FormLabel>Candidate Last Name</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            placeholder={`john@example.com`}
+                                            placeholder={`John`}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -92,6 +92,22 @@ const OfferForm = ({ form, handleSubmit }: FormProps) => {
                             )}
                         />
                     </div>
+                    <FormField
+                        control={form.control}
+                        name="candidate.email"
+                        render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel>Candidate Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        placeholder={`john@example.com`}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="role"

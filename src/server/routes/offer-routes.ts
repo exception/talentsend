@@ -29,8 +29,9 @@ export const offerRoutes = createTRPCRouter({
 
             return prisma.offer.create({
                 data: {
-                    targetEmail: input.offer.candidateEmail,
-                    targetName: input.offer.candidateName,
+                    targetEmail: input.offer.candidate?.email,
+                    targetFirstName: input.offer.candidate?.firstName,
+                    targetLastName: input.offer.candidate?.lastName,
                     expiresAt: input.offer.expiryDate,
                     ...(input.offer.compensation.benefit
                         ? {
@@ -83,8 +84,9 @@ export const offerRoutes = createTRPCRouter({
                     },
                 },
                 data: {
-                    targetEmail: input.offer.candidateEmail,
-                    targetName: input.offer.candidateName,
+                    targetEmail: input.offer.candidate?.email,
+                    targetFirstName: input.offer.candidate?.firstName,
+                    targetLastName: input.offer.candidate?.lastName,
                     expiresAt: input.offer.expiryDate,
                     ...(input.offer.compensation?.benefit
                         ? {
