@@ -1,7 +1,6 @@
 'use client';
 
-import { EquitySchema } from '@/app/app/t/[team]/settings/equity/page';
-import { OfferSchema } from '@/lib/offer';
+import { EquitySchema, OfferSchema } from '@/lib/offer';
 import { Organization } from '@prisma/client';
 import { Separator } from '../ui/separator';
 import { useState } from 'react';

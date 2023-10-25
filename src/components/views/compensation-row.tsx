@@ -4,7 +4,7 @@ import { BenefitPackage, Organization } from '@prisma/client';
 import { PartialOffer } from './public-offer';
 import { PackageType } from '@/app/app/t/[team]/settings/benefits/benefit-editor';
 import { Separator } from '../ui/separator';
-import { EquitySchema } from '@/app/app/t/[team]/settings/equity/page';
+import { EquitySchema } from '@/lib/offer';
 
 interface CompensationRow {
     comp: PartialOffer['compensation'];

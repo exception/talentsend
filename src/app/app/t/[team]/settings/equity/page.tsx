@@ -9,26 +9,7 @@ import { Button } from '@/components/ui/button';
 import EquityForm from './form';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { useToast } from '@/components/ui/use-toast';
-
-export const EquitySchema = z.object({
-    stage: z.enum([
-        'PRIVATE',
-        'PRE_SEED',
-        'SEED',
-        'SERIES_A',
-        'SERIES_B',
-        'SERIES_C',
-    ]),
-    totalFunding: z.coerce.number(),
-    valuation: z.coerce.number(),
-    fair_market_value: z.coerce.number().optional(),
-    preferred: z.object({
-        issue_price: z.coerce.number(),
-        shares: z.coerce.number(),
-    }),
-});
-
-export type EquitySchema = z.infer<typeof EquitySchema>;
+import { EquitySchema } from '@/lib/offer';
 
 const EquityPage = () => {
     const { team, refetch } = useTeam();

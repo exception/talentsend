@@ -6,9 +6,6 @@ import { prisma } from "@/db";
 import { type User } from "@prisma/client";
 import { defaultCookies } from "@/lib/constants/cookies";
 import { IS_ON_VERCEL } from "@/lib/constants";
-import { DateTime } from "luxon";
-import { sendEmail } from "@/lib/resend";
-import WelcomeEmail from "@/lib/resend/emails/welcome-email";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -92,34 +89,34 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  events: {
-    signIn: async (message) => {
-      if (message.isNewUser) {
-        // isNewUser is triggered by dangerous account linking too
-        const email = message.user.email!;
-        const user = await prisma.user.findUnique({
-          where: { email },
-          select: { name: true, joinedAt: true },
-        });
+  // events: {
+  //   signIn: async (message) => {
+  //     if (message.isNewUser) {
+  //       // isNewUser is triggered by dangerous account linking too
+  //       const email = message.user.email!;
+  //       const user = await prisma.user.findUnique({
+  //         where: { email },
+  //         select: { name: true, joinedAt: true },
+  //       });
 
-        if (user?.joinedAt) {
-          const start = DateTime.fromJSDate(user.joinedAt);
-          const difference = DateTime.now().diff(start, "seconds");
+  //       if (user?.joinedAt) {
+  //         const start = DateTime.fromJSDate(user.joinedAt);
+  //         const difference = DateTime.now().diff(start, "seconds");
 
-          if (difference.seconds <= 10) {
-            void sendEmail({
-              to: email,
-              subject: "Welcome to TalentSend",
-              content: WelcomeEmail({
-                name: user.name!,
-                email,
-              }),
-            });
-          }
-        }
-      }
-    },
-  },
+  //         if (difference.seconds <= 10) {
+  //           void sendEmail({
+  //             to: email,
+  //             subject: "Welcome to TalentSend",
+  //             content: WelcomeEmail({
+  //               name: user.name!,
+  //               email,
+  //             }),
+  //           });
+  //         }
+  //       }
+  //     }
+  //   },
+  // },
 };
 
 export default NextAuth(authOptions);

@@ -1,7 +1,6 @@
 'use client';
 
 import { SubmitHandler, UseFormReturn } from 'react-hook-form';
-import { EquitySchema } from './page';
 import {
     Form,
     FormControl,
@@ -22,6 +21,7 @@ import { title } from 'radash';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { EquitySchema } from '@/lib/offer';
 
 interface EquityFormProps {
     form: UseFormReturn<EquitySchema>;

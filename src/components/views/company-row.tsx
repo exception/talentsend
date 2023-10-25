@@ -1,6 +1,6 @@
 'use client';
 
-import { EquitySchema } from '@/app/app/t/[team]/settings/equity/page';
+import { EquitySchema } from '@/lib/offer';
 import { Organization } from '@prisma/client';
 import Image from 'next/image';
 import { title } from 'radash';
