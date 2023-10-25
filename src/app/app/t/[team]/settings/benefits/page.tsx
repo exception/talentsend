@@ -4,7 +4,7 @@ import SettingsContainer from '@/app/app/settings/settings-container';
 import { useTeam } from '../../layout';
 import { Button, buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { PencilIcon } from 'lucide-react';
+import { PencilIcon, Plus } from 'lucide-react';
 import { PackageType } from './benefit-editor';
 
 const NoBenefitsCard = () => {
@@ -22,6 +22,7 @@ const BenefitsPage = () => {
                     href={`/t/${team.slug}/settings/benefits/new`}
                     className={buttonVariants({ variant: 'default' })}
                 >
+                    <Plus className="h-4 w-4" />
                     Create new Package
                 </Link>
             )}

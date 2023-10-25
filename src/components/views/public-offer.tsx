@@ -2,7 +2,6 @@ import { OfferSchema } from '@/lib/offer';
 import { z } from 'zod';
 import MaxWidthContainer from '../app/max-width-container';
 import Image from 'next/image';
-import { first } from 'radash';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import CompensationRow from './compensation-row';
@@ -53,7 +52,7 @@ const PublicOfferView = ({
                     width={60}
                     className="h-16 w-16"
                     src={offer.organization.imageUrl!}
-                    alt="test"
+                    alt={offer.organization.name}
                 />
                 <div className="rounded-xl bg-white shadow-md lg:p-8 p-4 flex flex-col w-full">
                     <h1 className="text-lg lg:text-3xl font-semibold">

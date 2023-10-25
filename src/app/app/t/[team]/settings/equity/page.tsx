@@ -10,6 +10,7 @@ import EquityForm from './form';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { useToast } from '@/components/ui/use-toast';
 import { EquitySchema } from '@/lib/offer';
+import { Save } from 'lucide-react';
 
 const EquityPage = () => {
     const { team, refetch } = useTeam();
@@ -47,6 +48,7 @@ const EquityPage = () => {
                         !form.formState.isValid || !form.formState.isDirty
                     }
                     loading={updateMutation.isLoading}
+                    icon={<Save className="h-4 w-4" />}
                 >
                     Save
                 </Button>

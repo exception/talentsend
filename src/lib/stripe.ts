@@ -12,7 +12,7 @@ export const getStripeCustomerId = async (team: Organization): Promise<string> =
     return team.stripeCustomerId;
   }
 
-  const customer = await stripe.customers.create();
+  const customer = await stripe.customers.create({ name: team.name });
 
   await prisma.organization.update({
     where: {

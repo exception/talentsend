@@ -65,6 +65,12 @@ model User {
   Offer         Offer[]
 }
 
+enum TeamPlan {
+  FREE
+  PREMIUM
+  ENTERPRISE
+}
+
 model Organization {
   id   String @id @default(cuid())
   name String
@@ -76,6 +82,7 @@ model Organization {
   brand            Json?
   equity           Json?
   stripeCustomerId String?
+  plan             TeamPlan @default(FREE)
 
   members         OrgMember[]
   offers          Offer[]
@@ -128,7 +135,8 @@ model Offer {
   createdAt DateTime @default(now())
   body      Json
 
-  expiresAt DateTime?
+  expiresAt                DateTime?
+  canSkipEmailConfirmation Boolean   @default(false)
 
   createdBy      User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)

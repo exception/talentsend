@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { OfferSchema } from '@/lib/offer';
 import { pick } from 'radash';
+import { isTeamPremium } from '@/lib/team';
 
 export const offerRoutes = createTRPCRouter({
     create: protectedProcedure
@@ -49,6 +50,7 @@ export const offerRoutes = createTRPCRouter({
                         'role',
                         'startDate',
                     ]),
+                    status: isTeamPremium(organization) ? "DRAFT" : "PENDING", // draft = publishable, pending = needs payment
                     createdBy: {
                         connect: {
                             id: session.user.id,

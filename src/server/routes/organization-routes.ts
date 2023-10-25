@@ -12,7 +12,7 @@ export const organizationRoutes = createTRPCRouter({
             }),
         )
         .mutation(async ({ ctx: { session, prisma }, input }) => {
-            const stripeCustomer = await stripe.customers.create();
+            const stripeCustomer = await stripe.customers.create({ name: input.name });
 
             return prisma.organization.create({
                 data: {
@@ -110,6 +110,9 @@ export const organizationRoutes = createTRPCRouter({
         .input(
             z.object({
                 slug: z.string(),
+                filter: z.object({
+                    status: z.enum(["DRAFT", "ACCEPTED", "CANCELLED", "PENDING", "PUBLISHED"]).optional()
+                }).optional()
             }),
         )
         .query(({ ctx: { session, prisma }, input }) => {
@@ -123,6 +126,9 @@ export const organizationRoutes = createTRPCRouter({
                             },
                         },
                     },
+                    ...(input.filter?.status ? {
+                        status: input.filter.status
+                    } : undefined)
                 },
                 orderBy: {
                     createdAt: 'desc',

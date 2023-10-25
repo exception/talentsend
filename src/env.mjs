@@ -20,6 +20,8 @@ export const env = createEnv({
 
         STRIPE_SECRET_KEY: z.string().min(1),
         STRIPE_ONE_TIME_PAYMENT_ID: z.string().min(1),
+
+        LOOPS_API_KEY: z.string().min(1),
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -33,5 +35,7 @@ export const env = createEnv({
         NGROK_URL: process.env.NGROK_URL,
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         STRIPE_ONE_TIME_PAYMENT_ID: process.env.STRIPE_ONE_TIME_PAYMENT_ID,
+
+        LOOPS_API_KEY: process.env.LOOPS_API_KEY,
     },
 });

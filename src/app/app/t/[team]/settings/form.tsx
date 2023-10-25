@@ -101,6 +101,7 @@ const TeamAboutForm = () => {
                                 <Textarea
                                     {...field}
                                     placeholder={`Some information on ${team.name} that candidates can read about.`}
+                                    rows={8}
                                 />
                             </FormControl>
                             <FormMessage />

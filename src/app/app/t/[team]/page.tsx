@@ -1,15 +1,41 @@
 'use client';
 
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { Pencil, Plus, SendHorizonal } from 'lucide-react';
+import {
+    Check,
+    Cog,
+    Filter,
+    ListRestart,
+    Pencil,
+    Plus,
+    SendHorizonal,
+} from 'lucide-react';
 import Image from 'next/image';
 import { Offer, Organization } from '@prisma/client';
 import { useTeam } from './layout';
 import Link from 'next/link';
 import { OfferSchema } from '@/lib/offer';
 import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
+import { AppRouter } from '@/server/root';
+import SettingsContainer from '../../settings/settings-container';
+import MaxWidthContainer from '@/components/app/max-width-container';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuPortal,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { title } from 'radash';
+import { cn } from '@/lib/utils';
 
 const NoOrganization = () => {
     const { team } = useTeam();
@@ -116,9 +142,7 @@ const CardContent = ({
                                 <p className="text-gray-900">{_offer.role}</p>
                             </td>
                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                    {offer.status}
-                                </span>
+                                <Badge>{offer.status}</Badge>
                             </td>
                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                 <p className="font-medium text-gray-900">
@@ -161,42 +185,124 @@ const CardContent = ({
     );
 };
 
+type FilterType = inferProcedureInput<
+    AppRouter['_def']['procedures']['organization']['offers']
+>['filter'];
+
+type StatusType = NonNullable<FilterType>['status'];
+
+const statusValues: StatusType[] = [
+    'PENDING',
+    'DRAFT',
+    'PUBLISHED',
+    'ACCEPTED',
+    'CANCELLED',
+];
+
+const FilterDropdown = ({
+    filter,
+    setFilter,
+}: {
+    filter: FilterType;
+    setFilter: Dispatch<SetStateAction<FilterType>>;
+}) => {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button
+                    icon={<Filter className="h-4 w-4" />}
+                    variant="outline"
+                    size="sm"
+                ></Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        <Cog className="mr-2 h-4 w-4" />
+                        <span>Status</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                            {statusValues.map((status) => {
+                                const isActive = status === filter?.status;
+
+                                return (
+                                    <DropdownMenuItem
+                                        className={cn(
+                                            isActive && 'bg-neutral-100',
+                                            'flex flex-row justify-between cursor-pointer',
+                                        )}
+                                        onClick={() =>
+                                            setFilter((prev) => ({
+                                                ...prev,
+                                                status: isActive
+                                                    ? undefined
+                                                    : status,
+                                            }))
+                                        }
+                                    >
+                                        <span>
+                                            {title(status?.toLowerCase())}
+                                        </span>
+                                        {isActive && (
+                                            <Check className="h-4 w-4" />
+                                        )}
+                                    </DropdownMenuItem>
+                                );
+                            })}
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuSub>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+};
+
 const TeamPage = () => {
     const { team } = useTeam();
+    const [filter, setFilter] = useState<FilterType>();
     const { data, isLoading } = trpc.organization.offers.useQuery({
         slug: team.slug,
+        filter,
     });
 
     return (
-        <>
-            <div className="flex flex-col px-2.5 lg:px-20 mt-5">
-                <div className="w-full rounded-t-md border border-neutral-300 bg-white p-4 flex justify-between items-center sticky top-20">
-                    <h2 className="font-semibold text-base lg:text-lg">
-                        {team.name}&apos;s Offers
-                    </h2>
-                    <Link
-                        href={`/t/${team.slug}/offer/new`}
-                        className={buttonVariants({
-                            variant: 'default',
-                            size: 'sm',
-                        })}
-                    >
-                        <Plus className="h-4 w-4" />
-                        Create Offer
-                    </Link>
-                </div>
-                <div className="w-full rounded-b-md border border-neutral-300 bg-neutral-50 border-t-0 border-dashed p-4 overflow-x-auto scrollbar-hide">
+        <MaxWidthContainer className="mt-5">
+            <SettingsContainer
+                title={`${team.name}'s Offers`}
+                renderChild={() => (
+                    <div className="flex flex-row items-center space-x-2">
+                        {filter && (
+                            <Button
+                                variant="outline"
+                                icon={<ListRestart className="h-4 w-4" />}
+                                onClick={() => setFilter(undefined)}
+                                size="sm"
+                            ></Button>
+                        )}
+                        <FilterDropdown filter={filter} setFilter={setFilter} />
+                        <Link
+                            href={`/t/${team.slug}/offer/new`}
+                            className={buttonVariants({
+                                variant: 'default',
+                                size: 'sm',
+                            })}
+                        >
+                            <Plus className="h-4 w-4" />
+                            Create Offer
+                        </Link>
+                    </div>
+                )}
+            >
+                <div className="overflow-x-auto scrollbar-hide">
                     <CardContent
                         data={data ?? []}
                         isLoading={isLoading}
                         team={team}
                     />
                 </div>
-                {/* <Button className="self-end mt-2" variant="outline">
-                    1
-                </Button> */}
-            </div>
-        </>
+            </SettingsContainer>
+        </MaxWidthContainer>
     );
 };
 

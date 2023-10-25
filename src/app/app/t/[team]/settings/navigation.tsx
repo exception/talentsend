@@ -81,7 +81,7 @@ const Navigation = () => {
     return (
         <nav
             className={cn(
-                'sticky top-20 overflow-x-auto scrollbar-hide  flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 lg:w-64 grow-0 h-auto p-2 bg-white border-b border-neutral-200 lg:bg-transparent lg:border-none lg:py-0 z-10 w-full',
+                'sticky top-20 overflow-x-auto scrollbar-hide flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 lg:w-64 grow-0 h-auto p-2 bg-white border-b border-neutral-200 lg:bg-transparent lg:border-none lg:py-0 z-10 w-full',
                 isMobile &&
                     scrolled &&
                     'bg-white border-b border-t border-neutral-200',

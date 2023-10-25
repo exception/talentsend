@@ -5,8 +5,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { prisma } from "@/db";
 import { type GetServerSidePropsContext } from "next";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { env } from "@/env.mjs";
+import { authOptions } from "@/lib/auth/options";
 
 const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
