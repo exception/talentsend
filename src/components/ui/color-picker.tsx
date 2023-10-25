@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Popover from './popover';
 import { HexColorPicker } from 'react-colorful';
 import { cn } from '@/lib/utils';
+import { Input } from './input';
 
 interface ColorPickerProps extends React.HTMLAttributes<HTMLDivElement> {
     defaultColor?: string;
@@ -19,7 +20,20 @@ const ColorPicker = ({
     return (
         <Popover
             render={() => (
-                <HexColorPicker color={defaultColor} onChange={onColorChange} />
+                <div className="flex flex-col items-start space-y-2">
+                    <HexColorPicker
+                        color={defaultColor}
+                        onChange={onColorChange}
+                    />
+                    <Input
+                        type="text"
+                        value={defaultColor}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            onColorChange(value);
+                        }}
+                    />
+                </div>
             )}
         >
             <div
