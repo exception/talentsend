@@ -11,6 +11,7 @@ import { OfferSchema } from '@/lib/offer';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Offer } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import va from '@vercel/analytics';
 
 interface OfferPageProps {
     offer?: Offer;
@@ -51,6 +52,7 @@ const OfferView = ({ offer }: OfferPageProps) => {
 
     const createOfferMutation = trpc.offers.create.useMutation({
         async onSuccess({ id }) {
+            va.track('Created Offer');
             router.push(`/t/${team.slug}/offer/${id}`);
         },
     });

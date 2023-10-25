@@ -17,6 +17,7 @@ import { z } from 'zod';
 import slugify from '@sindresorhus/slugify';
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/lib/providers/trpc-provider';
+import va from '@vercel/analytics';
 
 const formSchema = z.object({
     name: z.string().max(40),
@@ -34,6 +35,7 @@ const CreateOrganizationModal = ({ setOpen }: CreateOrganizationModalProps) => {
         async onSuccess() {
             await utils.users.organizations.refetch();
             setOpen(false);
+            va.track('Created Team');
         },
     });
 
