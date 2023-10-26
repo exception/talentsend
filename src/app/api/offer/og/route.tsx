@@ -16,14 +16,12 @@ export async function GET(request: NextRequest) {
     const offerId = searchParams.get('offerId');
 
     if (!offerId) {
-        return new ImageResponse(<></>);
+        return new Response(`Offer not found`, {
+            status: 404,
+        });
     }
 
     const offer = await getOfferAndTeamViaEdge(offerId);
-
-    if (!offer) {
-        return new ImageResponse(<></>);
-    }
 
     return new ImageResponse(
         (
@@ -138,10 +136,10 @@ export async function GET(request: NextRequest) {
                         </div>
                         <h2 tw="flex flex-col text-7xl">
                             <span tw="text-[#9FFB4F]">
-                                {offer.targetFirstName},
+                                {offer?.targetFirstName},
                             </span>
                             <span tw="text-[#EEF9E4]">
-                                here&apos;s your job offer from {offer.name}!
+                                here&apos;s your job offer from {offer?.name}!
                             </span>
                         </h2>
                     </div>
