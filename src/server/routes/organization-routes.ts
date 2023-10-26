@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import cloudinary from 'cloudinary';
 import stripe from '@/lib/stripe';
+import { sendEmail } from '@/lib/loops';
+import { APP_URL } from '@/lib/constants';
 
 export const organizationRoutes = createTRPCRouter({
     create: protectedProcedure
@@ -275,7 +277,23 @@ export const organizationRoutes = createTRPCRouter({
                 email: z.string().email(),
             }),
         )
-        .mutation(({ ctx: { prisma }, input }) => {
+        .mutation(async ({ ctx: { session, prisma }, input }) => {
+            const team = await prisma.organization.findUniqueOrThrow({
+                where: {
+                    id: input.orgId
+                }
+            });
+
+            void sendEmail({
+                target: input.email.toLowerCase(),
+                type: 'TEAM_INVITE',
+                body: {
+                    inviterName: session.user.name,
+                    companyName: team.name,
+                    inviteUrl: `${APP_URL}/invites`
+                }
+            });
+
             return prisma.memberInvite.create({
                 data: {
                     target: input.email.toLowerCase(),
