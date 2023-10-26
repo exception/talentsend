@@ -10,7 +10,9 @@ import { FREE_PLAN, plans } from '@/lib/plans';
 const getOfferStateFromTeam = (team: Organization): OfferStatus => {
     const pricingPlan = plans.find(plan => plan.type === team.plan) ?? FREE_PLAN;
 
-    if (team.offerCuota + 1 > pricingPlan.maxCuota) {
+    const isInfinite = pricingPlan.maxCuota === -1;
+
+    if (!isInfinite && team.offerCuota + 1 > pricingPlan.maxCuota) {
         return "PENDING"; // will need to pay
     }
 
@@ -159,7 +161,7 @@ export const offerRoutes = createTRPCRouter({
             if (input.status === 'PUBLISHED') {
                 // todo check if offer has not been published yet.
             }
-            
+
             return prisma.offer.update({
                 where: {
                     id: input.offerId,

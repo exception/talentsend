@@ -11,7 +11,7 @@ type PremiumPlan = {
     name: string;
     maxCuota: number; // -1 = unlimited
     type: TeamPlan;
-    exceededCuotaPricing: PricingPlan;
+    exceededCuotaPricing?: PricingPlan;
     stripePlans?: Record<BillingCycle, PricingPlan>;
 };
 
@@ -35,6 +35,21 @@ export const plans: PremiumPlan[] = [
             price: 19,
             priceId: '',
         },
+        stripePlans: {
+            MONTHLY: {
+                price: 199,
+                priceId: '',
+            },
+            YEARLY: {
+                price: 2000,
+                priceId: '',
+            },
+        },
+    },
+    {
+        name: 'Enterprise',
+        maxCuota: -1,
+        type: 'ENTERPRISE',
         stripePlans: {
             MONTHLY: {
                 price: 199,
