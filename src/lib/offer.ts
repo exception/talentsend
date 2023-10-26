@@ -10,8 +10,8 @@ export const CompensationSchema = z.object({
                 required_error: "Equity Quantity value is required."
             }),
             type: z.enum(["ISO"]).default("ISO"),
-            vesting: z.string().optional(),
-            exerciseWindow: z.enum(["6_MONTHS", "1_YEAR", "2_YEARS"]).optional(),
+            vesting: z.string().default("standard").optional(),
+            exerciseWindow: z.enum(["6_MONTHS", "1_YEAR", "2_YEARS"]).default("1_YEAR").optional(),
             early: z.boolean().optional(),
             showPerformanceScenarios: z.boolean().optional()
         }).optional(),
