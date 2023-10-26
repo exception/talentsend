@@ -7,8 +7,6 @@ const interBold = fetch(
 
 export const runtime = 'edge';
 
-export const contentType = 'image/png';
-
 export async function GET(request: NextRequest) {
     const interBoldFont = await interBold;
 
