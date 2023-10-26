@@ -31,9 +31,22 @@ const PartialOffer = OfferSchema.pick({
     role: true,
     manager: true,
     startDate: true,
+    introVideo: true,
 }).partial();
 
 export type PartialOffer = z.infer<typeof PartialOffer>;
+
+const sanitizeEmbed = (url: string) => {
+    if (url.includes('youtube.com/embed')) {
+        if (url.includes('?')) {
+            return `${url}&controls=0`;
+        }
+
+        return `${url}?controls=0`;
+    }
+
+    return url;
+};
 
 const PublicOfferView = ({
     offer,
@@ -146,7 +159,14 @@ const PublicOfferView = ({
                                     )}
                                 </div>
                             </div>
-                            {/* <div className="flex w-full lg:w-[800px] h-[300px] bg-black"></div> */}
+                            {_offer.introVideo && (
+                                <div className="flex w-full lg:max-w-[500px] h-[500px] lg:h-[300px]">
+                                    <iframe
+                                        className="h-full w-full"
+                                        src={sanitizeEmbed(_offer.introVideo)}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                     {/* <div className="flex flex-row items-center justify-center space-x-2 w-full overflow-x-auto scrollbar-hide">
@@ -199,6 +219,25 @@ const PublicOfferView = ({
                         )}
                     <BenefitRow benefit={offer.benefitPackage ?? undefined} />
                     <CompanyRow organization={offer.organization} />
+                    <div
+                        className="mt-5 rounded-xl p-4 w-full text-white"
+                        style={{
+                            background: branding.primary,
+                        }}
+                    >
+                        <p className="text-xs">
+                            <span className="font-semibold">Disclaimer - </span>
+                            All information provided should not be considered as
+                            financial, legal, or tax advice. These numbers may
+                            not accurately reflect exact amounts or future
+                            performance information. Talentsend cannot guarantee
+                            the accuracy of the information provided and will
+                            not be liable for any actions taken based upon them.
+                            All information is as provided by the hiring
+                            company, and should be considered private and
+                            confidential.
+                        </p>
+                    </div>
                 </MaxWidthContainer>
                 {showAcceptOffer && _offer.manager && (
                     <div className="fixed inset-x-0 bottom-0 flex h-20 flex-row justify-between bg-white border-t border-t-neutral-200 p-4 z-50">

@@ -49,7 +49,7 @@ const EquityCard = ({
             <div className="flex flex-row space-x-2">
                 <p className="text-sm font-light">{title}</p>
                 {tooltip && (
-                    <Tooltip>
+                    <Tooltip delayDuration={0}>
                         <TooltipTrigger>
                             <Info className="h-4 w-4" />
                         </TooltipTrigger>
@@ -108,7 +108,8 @@ const EquityRow = ({ branding, equity, orgEquity }: EquityRow) => {
                 <h1 className="text-lg lg:text-2xl font-semibold">Equity</h1>
                 <div className="flex flex-col-reverse lg:flex-row lg:space-x-2 items-end lg:items-center">
                     <p className="font-mono text-sm">
-                        {equity.quantity} Incentive Stock Options
+                        {equity.quantity.toLocaleString('en-US')} Incentive
+                        Stock Options
                     </p>
                     <h3 className="text-lg lg:text-4xl font-semibold">
                         {totalEquityValue.toLocaleString('en-US', {

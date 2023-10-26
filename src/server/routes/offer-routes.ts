@@ -120,6 +120,7 @@ export const offerRoutes = createTRPCRouter({
                         'manager',
                         'role',
                         'startDate',
+                        'introVideo'
                     ]),
                 },
             });

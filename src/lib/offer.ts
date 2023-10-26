@@ -28,6 +28,7 @@ export const OfferSchema = z.object({
         email: z.string().email()
     }),
     role: z.string(),
+    introVideo: z.string().url().optional(),
     introduction: z.string().optional(),
     startDate: z.coerce.date().optional(),
     expiryDate: z.coerce.date().optional(),

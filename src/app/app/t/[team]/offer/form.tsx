@@ -108,22 +108,45 @@ const OfferForm = ({ form, handleSubmit }: FormProps) => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="role"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel>Role</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        placeholder={`Software Engineer`}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <div className="flex flex-col lg:flex-row lg:gap-x-2 mt-2">
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Role</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder={`Software Engineer`}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="introVideo"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>
+                                        Intro Video{' '}
+                                        <span className="text-sm font-normal text-neutral-400">
+                                            (optional)
+                                        </span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder={`https://www.youtube.com/watch?v=h2EcwHxFJf0`}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <div className="flex flex-col lg:flex-row lg:gap-x-2 mt-2">
                         <FormField
                             control={form.control}

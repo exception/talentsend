@@ -39,18 +39,20 @@ const BenefitRow = ({ benefit }: BenefitRow) => {
                 >
                     <div className="flex flex-row justify-between items-center w-full">
                         <h3 className="text-xl font-semibold">{bf.name}</h3>
-                        <div className="inline-flex space-x-2 items-center">
-                            <p className="text-sm font-mono">
-                                Estimated Value:
-                            </p>
-                            <p className="text-lg font-semibold">
-                                {bf.value.toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'USD',
-                                    minimumFractionDigits: 0,
-                                })}
-                            </p>
-                        </div>
+                        {bf.value > 0 && (
+                            <div className="inline-flex space-x-2 items-center">
+                                <p className="text-sm font-mono">
+                                    Estimated Value:
+                                </p>
+                                <p className="text-lg font-semibold">
+                                    {bf.value.toLocaleString('en-US', {
+                                        style: 'currency',
+                                        currency: 'USD',
+                                        minimumFractionDigits: 0,
+                                    })}
+                                </p>
+                            </div>
+                        )}
                     </div>
                     <p className="text-sm text-neutral-400">{bf.description}</p>
                 </div>

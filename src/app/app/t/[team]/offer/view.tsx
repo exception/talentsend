@@ -27,6 +27,7 @@ const OfferView = ({ offer }: OfferPageProps) => {
         role: true,
         manager: true,
         startDate: true,
+        introVideo: true,
     })
         .partial()
         .parse(offer?.body ?? {});
@@ -47,6 +48,7 @@ const OfferView = ({ offer }: OfferPageProps) => {
             manager: _offer.manager,
             role: _offer.role,
             startDate: _offer.startDate,
+            introVideo: _offer.introVideo,
         },
     });
 
