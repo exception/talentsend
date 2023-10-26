@@ -85,7 +85,7 @@ export const GET = async (req: Request) => {
       line_items: [
         {
           quantity: 1,
-          price: stripePlan.exceededCuotaPricing.priceId,
+          price: stripePlan.exceededCuotaPricing?.priceId,
         },
       ],
       metadata: {
