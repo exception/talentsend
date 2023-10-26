@@ -53,7 +53,7 @@ export const generateMetadata = async ({
 
     return {
         title: `${offer.organization.name} x Talentsend`,
-        description: `Here's your offer from ${offer.organization.name}`,
+        description: `Congrat ${offer.targetFirstName}, here is your job offer from ${offer.organization.name}!`,
         openGraph: {
             title: `${offer.organization.name} x Talentsend`,
             description: `Here's your offer from ${offer.organization.name}`,
