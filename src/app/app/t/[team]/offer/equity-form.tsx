@@ -14,6 +14,15 @@ import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTeam } from '../layout';
 import { z } from 'zod';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { vestingOptions } from '@/lib/vesting';
+import { title } from 'radash';
 
 interface EquityForm {
     form: UseFormReturn<OfferSchema>;
@@ -31,7 +40,9 @@ const EquityForm = ({ form }: EquityForm) => {
     const { team } = useTeam();
     const showEquityDefault =
         form.getValues('compensation.equity.early') ||
-        form.getValues('compensation.equity.showPerformanceScenarios');
+        form.getValues('compensation.equity.showPerformanceScenarios') ||
+        !!form.getValues('compensation.equity.vesting') ||
+        !!form.getValues('compensation.equity.exerciseWindow');
 
     const equity = equitySchema.parse(team.equity ?? {});
     const equityAmount = form.watch('compensation.equity.quantity');
@@ -100,6 +111,85 @@ const EquityForm = ({ form }: EquityForm) => {
                                         onCheckedChange={field.onChange}
                                     />
                                 </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="compensation.equity.vesting"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Vesting</FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value ?? 'standard'}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger className="!py-6">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className="max-h-96 overflow-y-scroll">
+                                        {vestingOptions.map((option) => (
+                                            <SelectItem
+                                                key={option.id}
+                                                value={option.id}
+                                            >
+                                                <div className="flex flex-col items-start">
+                                                    <p>{option.name}</p>
+                                                    <p className="text-xs text-neutral-400">
+                                                        {option.values.join(
+                                                            '/',
+                                                        )}
+                                                        {option.cliff &&
+                                                            `, ${option.cliff.amount} ${option.cliff.kind} cliff`}
+                                                        ,{' '}
+                                                        {option.schedule.toLowerCase()}
+                                                    </p>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="compensation.equity.exerciseWindow"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Exercise Window</FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value ?? '1_YEAR'}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className="max-h-96 overflow-y-scroll">
+                                        {['6_MONTHS', '1_YEAR', '2_YEARS'].map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option}
+                                                    value={option}
+                                                >
+                                                    <div className="flex flex-col items-start">
+                                                        <p>
+                                                            {title(
+                                                                option.toLowerCase(),
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}

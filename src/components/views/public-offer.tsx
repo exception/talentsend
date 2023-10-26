@@ -223,7 +223,8 @@ const PublicOfferView = ({
                             }}
                             disabled={
                                 offer.canSkipEmailConfirmation ||
-                                offer.status === 'ACCEPTED'
+                                offer.status === 'ACCEPTED' ||
+                                accepted
                             }
                             onClick={() => setAccept(true)}
                         >

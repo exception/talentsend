@@ -83,6 +83,7 @@ model Organization {
   equity           Json?
   stripeCustomerId String?
   plan             TeamPlan @default(FREE)
+  offerCuota       Int      @default(0)
 
   members         OrgMember[]
   offers          Offer[]

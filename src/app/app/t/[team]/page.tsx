@@ -288,7 +288,7 @@ const TeamPage = () => {
                 title={`${team.name}'s Offers`}
                 renderChild={() => (
                     <div className="flex flex-row items-center space-x-2">
-                        {filter && (
+                        {filter && filter.status && (
                             <Button
                                 variant="outline"
                                 icon={<ListRestart className="h-4 w-4" />}

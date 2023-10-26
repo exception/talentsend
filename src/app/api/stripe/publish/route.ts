@@ -2,6 +2,7 @@ import { prisma } from "@/db";
 import { env } from "@/env.mjs";
 import { authOptions } from "@/lib/auth/options";
 import { APP_URL } from "@/lib/constants"
+import { FREE_PLAN, plans } from "@/lib/plans";
 import stripe, { getStripeCustomerId } from "@/lib/stripe";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
@@ -65,12 +66,15 @@ export const GET = async (req: Request) => {
     }
     
     if (offer.status != "PENDING") {
-      console.log("offer tried to be published via stripe but was already paid for", offer.id);
+      console.log("Offer tried to be published via stripe but was already paid for", offer.id);
       return new Response(null, { status: 403 });
     }
 
     const returnUrl = `${APP_URL}/api/stripe/callback?checkoutId={CHECKOUT_SESSION_ID}`;
 
+    const stripePlan = plans.find(plan => plan.type === team.plan) ?? FREE_PLAN;
+
+    // this is called when we know the cuota of the team has exceeded the max allowed.
     const checkoutSession = await stripe.checkout.sessions.create({
       success_url: returnUrl,
       cancel_url: returnUrl,
@@ -81,7 +85,7 @@ export const GET = async (req: Request) => {
       line_items: [
         {
           quantity: 1,
-          price: env.STRIPE_ONE_TIME_PAYMENT_ID,
+          price: stripePlan.exceededCuotaPricing.priceId,
         },
       ],
       metadata: {

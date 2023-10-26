@@ -5,6 +5,8 @@ import { PartialOffer } from './public-offer';
 import { PackageType } from '@/app/app/t/[team]/settings/benefits/benefit-editor';
 import { Separator } from '../ui/separator';
 import { EquitySchema } from '@/lib/offer';
+import { calculateAdjustedEquityValue, vestingOptions } from '@/lib/vesting';
+import { title } from 'radash';
 
 interface CompensationRow {
     comp: PartialOffer['compensation'];
@@ -141,11 +143,27 @@ const calculateAnnualComp = (
         const equityTotal =
             comp.equity.quantity * _orgEquity.preferred.issue_price;
 
+        const vestingOption = vestingOptions.find(
+            (option) => option.id === comp.equity?.vesting ?? 'standard',
+        );
+
+        const { adjustedValue, adjustedOptions } = calculateAdjustedEquityValue(
+            {
+                equityValue: equityTotal,
+                options: comp.equity.quantity,
+                vestingOptionId: comp.equity.vesting ?? 'standard',
+            },
+        );
+
         cards.push({
             title: 'Equity',
-            value: equityTotal,
-            description: `${comp.equity.quantity} Options Vested`,
+            value: adjustedValue,
+            description: `${adjustedOptions.toLocaleString('en-US', {
+                maximumFractionDigits: 2,
+            })} Options Vested ${title(vestingOption?.schedule.toLowerCase())}`,
         });
+
+        base += adjustedValue;
     }
 
     return {

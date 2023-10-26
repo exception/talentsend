@@ -2,9 +2,20 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { OfferSchema } from '@/lib/offer';
 import { pick } from 'radash';
-import { isTeamPremium } from '@/lib/team';
 import { sendEmail } from '@/lib/loops';
 import { APP_URL } from '@/lib/constants';
+import { OfferStatus, Organization } from '@prisma/client';
+import { FREE_PLAN, plans } from '@/lib/plans';
+
+const getOfferStateFromTeam = (team: Organization): OfferStatus => {
+    const pricingPlan = plans.find(plan => plan.type === team.plan) ?? FREE_PLAN;
+
+    if (team.offerCuota + 1 > pricingPlan.maxCuota) {
+        return "PENDING"; // will need to pay
+    }
+
+    return "DRAFT";
+}
 
 export const offerRoutes = createTRPCRouter({
     create: protectedProcedure
@@ -52,7 +63,7 @@ export const offerRoutes = createTRPCRouter({
                         'role',
                         'startDate',
                     ]),
-                    status: isTeamPremium(organization) ? 'DRAFT' : 'PENDING', // draft = publishable, pending = needs payment
+                    status: getOfferStateFromTeam(organization), // draft = publishable, pending = needs payment
                     createdBy: {
                         connect: {
                             id: session.user.id,
@@ -145,6 +156,10 @@ export const offerRoutes = createTRPCRouter({
             }),
         )
         .mutation(({ ctx: { session, prisma }, input }) => {
+            if (input.status === 'PUBLISHED') {
+                // todo check if offer has not been published yet.
+            }
+            
             return prisma.offer.update({
                 where: {
                     id: input.offerId,
