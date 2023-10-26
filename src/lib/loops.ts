@@ -1,6 +1,6 @@
 import { env } from "@/env.mjs";
 
-type EmailType = 'WELCOME';
+type EmailType = 'WELCOME' | 'OFFER_ACCEPTED' | 'OFFER_ACCEPTED_CANDIDATE';
 
 type EmailBody = {
     type: EmailType;
@@ -10,6 +10,8 @@ type EmailBody = {
 
 const transactionalEmailIds: Record<EmailType, string> = {
     WELCOME: 'clo4z2l8t00pvmn0p4afh89bu',
+    OFFER_ACCEPTED: 'clo6g6cc302csl10p5qv0b8o1',
+    OFFER_ACCEPTED_CANDIDATE: 'clo6gl31e00h3l20nlvomhg5w'
 };
 
 export const sendEmail = async ({ type, target, body }: EmailBody) => {

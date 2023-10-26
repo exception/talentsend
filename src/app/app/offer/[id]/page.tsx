@@ -14,17 +14,17 @@ const getOffer = cache(async (offerId: string) => {
     return prisma.offer.findUnique({
         where: {
             id: offerId,
-            status: 'PUBLISHED',
-            OR: [
-                {
-                    expiresAt: null,
-                },
-                {
-                    expiresAt: {
-                        gt: new Date(),
-                    },
-                },
-            ],
+            // status: 'PUBLISHED',
+            // OR: [
+            //     {
+            //         expiresAt: null,
+            //     },
+            //     {
+            //         expiresAt: {
+            //             gt: new Date(),
+            //         },
+            //     },
+            // ],
         },
         include: {
             organization: {

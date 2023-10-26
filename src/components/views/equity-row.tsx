@@ -76,7 +76,10 @@ const EquityRow = ({ branding, equity, orgEquity }: EquityRow) => {
     );
 
     return (
-        <div className="p-4 lg:p-8 bg-white rounded-xl shadow-md flex flex-col w-full space-y-4">
+        <div
+            id="equity"
+            className="p-4 lg:p-8 bg-white rounded-xl shadow-md flex flex-col w-full space-y-4"
+        >
             <div className="flex flex-row justify-between items-center w-full mb-4">
                 <h1 className="text-lg lg:text-2xl font-semibold">Equity</h1>
                 <div className="flex flex-col-reverse lg:flex-row lg:space-x-2 items-end lg:items-center">

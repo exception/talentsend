@@ -3,7 +3,7 @@ import { z } from 'zod';
 import MaxWidthContainer from '../app/max-width-container';
 import Image from 'next/image';
 import Link from 'next/link';
-import { format } from 'date-fns';
+import { format, isPast } from 'date-fns';
 import CompensationRow from './compensation-row';
 import { PublicOfferType } from '@/app/app/offer/[id]/page';
 import BenefitRow from './benefit-row';
@@ -41,7 +41,9 @@ const PublicOfferView = ({
 }: PublicOfferViewProps) => {
     const branding = BrandSchema.parse(offer.organization.brand ?? {});
     const [accept, setAccept] = useState(false);
+    const [accepted, setAccepted] = useState(false);
     const { toast } = useToast();
+    const isOfferExpired = offer.expiresAt && isPast(offer.expiresAt);
 
     const mutateOffer = trpc.offers.acceptOffer.useMutation({
         onSuccess() {
@@ -50,6 +52,7 @@ const PublicOfferView = ({
                 title: 'Offer accepted!',
                 description: `We have let the team at ${offer.organization.name} know!`,
             });
+            setAccepted(true);
         },
     });
 
@@ -87,7 +90,7 @@ const PublicOfferView = ({
                     </Button>
                 </div>
             </Modal>
-            <div className="flex flex-col bg-neutral-100 min-h-screen relative items-center pt-10 pb-24">
+            <div className="flex flex-col bg-neutral-100 min-h-screen relative items-center pt-10 pb-24 scroll-smooth">
                 <div
                     className="h-[384px] w-full absolute top-0"
                     style={{
@@ -146,6 +149,40 @@ const PublicOfferView = ({
                             {/* <div className="flex w-full lg:w-[800px] h-[300px] bg-black"></div> */}
                         </div>
                     </div>
+                    {/* <div className="flex flex-row items-center justify-center space-x-2 w-full overflow-x-auto scrollbar-hide">
+                        <Link
+                            href={'#overview'}
+                            className={buttonVariants({
+                                variant: 'ghost',
+                            })}
+                        >
+                            <ScrollText className="h-4 w-4" /> Overview
+                        </Link>
+                        {_offer.compensation?.equity &&
+                            offer.organization.equity && (
+                                <Link
+                                    href={'#equity'}
+                                    className={buttonVariants({
+                                        variant: 'ghost',
+                                    })}
+                                >
+                                    <Puzzle className="h-4 w-4" /> Equity
+                                </Link>
+                            )}
+                        <Link
+                            href={'#benefits'}
+                            className={buttonVariants({ variant: 'ghost' })}
+                        >
+                            <ShieldPlus className="h-4 w-4" /> Benefits
+                        </Link>
+                        <Link
+                            href={'#about'}
+                            className={buttonVariants({ variant: 'ghost' })}
+                        >
+                            <Info className="h-4 w-4" /> About{' '}
+                            {offer.organization.name}
+                        </Link>
+                    </div> */}
                     <CompensationRow
                         comp={_offer.compensation}
                         branding={branding}
@@ -184,10 +221,15 @@ const PublicOfferView = ({
                             style={{
                                 backgroundColor: branding.primary,
                             }}
-                            disabled={offer.canSkipEmailConfirmation}
+                            disabled={
+                                offer.canSkipEmailConfirmation ||
+                                offer.status === 'ACCEPTED'
+                            }
                             onClick={() => setAccept(true)}
                         >
-                            Verbally Accept Offer
+                            {offer.status === 'ACCEPTED' || accepted
+                                ? 'Offer Accepted'
+                                : 'Verbally Accept Offer'}
                         </button>
                     </div>
                 )}

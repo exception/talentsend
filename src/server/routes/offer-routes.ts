@@ -3,6 +3,8 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { OfferSchema } from '@/lib/offer';
 import { pick } from 'radash';
 import { isTeamPremium } from '@/lib/team';
+import { sendEmail } from '@/lib/loops';
+import { APP_URL } from '@/lib/constants';
 
 export const offerRoutes = createTRPCRouter({
     create: protectedProcedure
@@ -158,8 +160,47 @@ export const offerRoutes = createTRPCRouter({
                 offerId: z.string(),
             }),
         )
-        .mutation(({ ctx: { prisma }, input }) => {
-            // TODO SEND EMAIL
+        .mutation(async ({ ctx: { prisma }, input }) => {
+            const offerWithTeam = await prisma.offer.findUnique({
+                where: {
+                    id: input.offerId,
+                },
+                include: {
+                    organization: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                    createdBy: {
+                        select: {
+                            email: true,
+                            name: true,
+                        },
+                    },
+                },
+            });
+
+            if (!offerWithTeam) throw new Error('Invalid offer');
+
+            if (offerWithTeam?.createdBy?.email) {
+                void sendEmail({
+                    type: 'OFFER_ACCEPTED',
+                    target: offerWithTeam?.createdBy?.email,
+                    body: {
+                        candidateName: offerWithTeam.targetFirstName,
+                        offerLink: `${APP_URL}/offer/${offerWithTeam.id}`,
+                    },
+                });
+            }
+
+            void sendEmail({
+                type: 'OFFER_ACCEPTED_CANDIDATE',
+                target: offerWithTeam.targetEmail,
+                body: {
+                    companyName: offerWithTeam.organization.name,
+                },
+            });
+
             return prisma.offer.update({
                 where: {
                     id: input.offerId,

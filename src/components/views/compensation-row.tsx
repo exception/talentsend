@@ -169,7 +169,10 @@ const CompensationRow = ({
     );
 
     return (
-        <div className="p-4 lg:p-8 bg-white rounded-xl shadow-md flex flex-col w-full space-y-4 lg:space-y-8">
+        <div
+            id="overview"
+            className="p-4 lg:p-8 bg-white rounded-xl shadow-md flex flex-col w-full space-y-4 lg:space-y-8"
+        >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="text-lg lg:text-2xl font-semibold">Overview</h1>
                 <div className="flex flex-col-reverse lg:flex-row lg:space-x-2 items-end lg:items-center">

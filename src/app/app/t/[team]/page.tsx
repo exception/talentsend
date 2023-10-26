@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { trpc } from '@/lib/providers/trpc-provider';
 import {
     Check,
+    Clipboard,
     Cog,
     Filter,
     ListRestart,
@@ -36,6 +37,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { title } from 'radash';
 import { cn } from '@/lib/utils';
+import { APP_URL } from '@/lib/constants';
+import { useToast } from '@/components/ui/use-toast';
 
 const NoOrganization = () => {
     const { team } = useTeam();
@@ -71,6 +74,7 @@ const CardContent = ({
     isLoading: boolean;
     team: Organization;
 }) => {
+    const { toast } = useToast();
     if (isLoading) return <Skeleton className="w-full h-20" />;
     if (!isLoading && data.length === 0) return <NoOrganization />;
 
@@ -149,7 +153,19 @@ const CardContent = ({
                                     {format(offer.createdAt, 'dd MMM, yyyy')}
                                 </p>
                             </td>
-                            <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                            <td className="relative whitespace-nowrap flex space-x-2 py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                <Button
+                                    onClick={async () => {
+                                        await navigator.clipboard.writeText(
+                                            `${APP_URL}/offer/${offer.id}`,
+                                        );
+                                        toast({
+                                            title: 'Copied link to clipboard!',
+                                        });
+                                    }}
+                                    variant="outline"
+                                    icon={<Clipboard className="h-4 w-4" />}
+                                ></Button>
                                 <Link
                                     href={`/t/${team.slug}/offer/${offer.id}`}
                                     className={buttonVariants({
