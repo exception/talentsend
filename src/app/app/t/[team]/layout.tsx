@@ -6,10 +6,11 @@ import TeamNavigationRow from './navigation';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Skeleton } from '@/components/ui/skeleton';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { inferProcedureOutput } from '@trpc/server';
 import { AppRouter } from '@/server/root';
+import { Crisp } from 'crisp-sdk-web';
 
 export type TeamType = NonNullable<
     inferProcedureOutput<AppRouter['_def']['procedures']['organization']['get']>
@@ -43,6 +44,20 @@ const TeamPageLayout = ({
     const _refetch = async () => {
         await refetch();
     };
+
+    useEffect(() => {
+        if (data?.plan) {
+            Crisp.session.setData({
+                teamId: data.id,
+                teamName: data.name,
+                slug: data.slug,
+                plan: data.plan,
+                ...(data.stripeCustomerId && {
+                    stripeId: data.stripeCustomerId,
+                }),
+            });
+        }
+    }, [data]);
 
     if (isLoading) {
         return (
