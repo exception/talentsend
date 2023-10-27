@@ -38,7 +38,12 @@ const helper = (
                     `/t/${team.slug}/settings/members`,
                     `/t/${team.slug}/settings/benefits`,
                     `/t/${team.slug}/settings/equity`,
+                    `/t/${team.slug}/settings/apps`,
                 ],
+            },
+            {
+                href: `/t/${team.slug}/apps`,
+                title: 'Apps',
             },
         ];
     }

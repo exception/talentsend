@@ -53,6 +53,7 @@ export const POST = async (req: Request) => {
                     },
                     data: {
                         billingCycleStart: new Date().getDate(),
+                        billingCycleMonthStart: new Date().getMonth()
                     },
                 });
             } else if (event.type === 'customer.subscription.updated') {
@@ -76,6 +77,7 @@ export const POST = async (req: Request) => {
                     data: {
                         plan: plan.plan,
                         yearlyPlan: plan.isYearly,
+                        offerCuota: 0 // reset in case 
                     },
                 });
 

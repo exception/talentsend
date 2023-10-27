@@ -14,7 +14,9 @@ export const organizationRoutes = createTRPCRouter({
             }),
         )
         .mutation(async ({ ctx: { session, prisma }, input }) => {
-            const stripeCustomer = await stripe.customers.create({ name: input.name });
+            const stripeCustomer = await stripe.customers.create({
+                name: input.name,
+            });
 
             return prisma.organization.create({
                 data: {
@@ -112,9 +114,19 @@ export const organizationRoutes = createTRPCRouter({
         .input(
             z.object({
                 slug: z.string(),
-                filter: z.object({
-                    status: z.enum(["DRAFT", "ACCEPTED", "CANCELLED", "PENDING", "PUBLISHED"]).optional()
-                }).optional()
+                filter: z
+                    .object({
+                        status: z
+                            .enum([
+                                'DRAFT',
+                                'ACCEPTED',
+                                'CANCELLED',
+                                'PENDING',
+                                'PUBLISHED',
+                            ])
+                            .optional(),
+                    })
+                    .optional(),
             }),
         )
         .query(({ ctx: { session, prisma }, input }) => {
@@ -128,9 +140,11 @@ export const organizationRoutes = createTRPCRouter({
                             },
                         },
                     },
-                    ...(input.filter?.status ? {
-                        status: input.filter.status
-                    } : undefined)
+                    ...(input.filter?.status
+                        ? {
+                              status: input.filter.status,
+                          }
+                        : undefined),
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -280,8 +294,8 @@ export const organizationRoutes = createTRPCRouter({
         .mutation(async ({ ctx: { session, prisma }, input }) => {
             const team = await prisma.organization.findUniqueOrThrow({
                 where: {
-                    id: input.orgId
-                }
+                    id: input.orgId,
+                },
             });
 
             void sendEmail({
@@ -290,8 +304,8 @@ export const organizationRoutes = createTRPCRouter({
                 body: {
                     inviterName: session.user.name,
                     companyName: team.name,
-                    inviteUrl: `${APP_URL}/invites`
-                }
+                    inviteUrl: `${APP_URL}/invites`,
+                },
             });
 
             return prisma.memberInvite.create({
@@ -302,6 +316,19 @@ export const organizationRoutes = createTRPCRouter({
                             id: input.orgId,
                         },
                     },
+                },
+            });
+        }),
+    installedApps: protectedProcedure
+        .input(
+            z.object({
+                teamId: z.string(),
+            }),
+        )
+        .query(({ ctx: { prisma }, input }) => {
+            return prisma.installedApp.findMany({
+                where: {
+                    organizationId: input.teamId,
                 },
             });
         }),

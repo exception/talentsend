@@ -76,23 +76,25 @@ model Organization {
   name String
   slug String @unique
 
-  imageUrl          String?
-  about             Json?
-  brand             Json?
-  equity            Json?
-  stripeCustomerId  String?  @unique
-  plan              TeamPlan @default(FREE)
-  offerCuota        Int      @default(0)
-  billingCycleStart Int?
-  yearlyPlan        Boolean?
+  imageUrl               String?
+  about                  Json?
+  brand                  Json?
+  equity                 Json?
+  stripeCustomerId       String?  @unique
+  plan                   TeamPlan @default(FREE)
+  offerCuota             Int      @default(0)
+  billingCycleStart      Int?
+  yearlyPlan             Boolean?
+  billingCycleMonthStart Int?
 
   members         OrgMember[]
   offers          Offer[]
   invites         MemberInvite[]
   benefitPackages BenefitPackage[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  installedApps InstalledApp[]
 
   @@index([stripeCustomerId])
 }
@@ -181,6 +183,20 @@ model BenefitPackage {
   organizationId String
 
   offers Offer[]
+
+  @@index([organizationId])
+}
+
+model InstalledApp {
+  id Int @id @default(autoincrement())
+
+  appId   String
+  appData Json
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  installedAt DateTime @default(now())
 
   @@index([organizationId])
 }
