@@ -7,6 +7,7 @@ import {
     Check,
     Clipboard,
     Cog,
+    ExternalLink,
     Filter,
     ListRestart,
     Pencil,
@@ -14,11 +15,11 @@ import {
     SendHorizonal,
 } from 'lucide-react';
 import Image from 'next/image';
-import { Offer, Organization } from '@prisma/client';
+import { Offer, OfferStatus, Organization } from '@prisma/client';
 import { useTeam } from './layout';
 import Link from 'next/link';
 import { OfferSchema } from '@/lib/offer';
-import { format } from 'date-fns';
+import { format, isPast } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
@@ -63,6 +64,10 @@ const NoOrganization = () => {
             </Link>
         </div>
     );
+};
+
+const canEdit = (status: OfferStatus) => {
+    return status === 'DRAFT' || status === 'CANCELLED';
 };
 
 const CardContent = ({
@@ -129,6 +134,8 @@ const CardContent = ({
                         .partial()
                         .parse(offer?.body ?? {});
 
+                    const expired = offer.expiresAt && isPast(offer.expiresAt);
+
                     return (
                         <tr key={offer.id}>
                             <td className="whitespace-nowrap py-5 px-3 text-sm sm:pl-0">
@@ -146,7 +153,9 @@ const CardContent = ({
                                 <p className="text-gray-900">{_offer.role}</p>
                             </td>
                             <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                <Badge>{offer.status}</Badge>
+                                <Badge>
+                                    {expired ? 'EXPIRED' : offer.status}
+                                </Badge>
                             </td>
                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                 <p className="font-medium text-gray-900">
@@ -172,7 +181,7 @@ const CardContent = ({
                                         variant: 'outline',
                                     })}
                                 >
-                                    <Pencil className="h-4 w-4" />
+                                    <ExternalLink className="h-4 w-4" />
                                 </Link>
                             </td>
                         </tr>

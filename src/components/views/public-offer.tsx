@@ -217,7 +217,9 @@ const PublicOfferView = ({
                                 branding={branding}
                             />
                         )}
-                    <BenefitRow benefit={offer.benefitPackage ?? undefined} />
+                    {offer.benefitPackage && (
+                        <BenefitRow benefit={offer.benefitPackage} />
+                    )}
                     <CompanyRow organization={offer.organization} />
                     <div
                         className="mt-5 rounded-xl p-4 w-full text-white"

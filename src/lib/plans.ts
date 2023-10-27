@@ -1,3 +1,4 @@
+import { env } from '@/env.mjs';
 import { TeamPlan } from '@prisma/client';
 
 type BillingCycle = 'MONTHLY' | 'YEARLY';
@@ -33,16 +34,16 @@ export const plans: PremiumPlan[] = [
         type: 'PREMIUM',
         exceededCuotaPricing: {
             price: 19,
-            priceId: '',
+            priceId: env.TEAM_PREMIUM_OVERAGE_PRICE_ID,
         },
         stripePlans: {
             MONTHLY: {
                 price: 199,
-                priceId: '',
+                priceId: env.TEAM_PREMIUM_MONTHLY,
             },
             YEARLY: {
                 price: 2000,
-                priceId: '',
+                priceId: env.TEAM_PREMIUM_YEARLY,
             },
         },
     },
@@ -52,13 +53,27 @@ export const plans: PremiumPlan[] = [
         type: 'ENTERPRISE',
         stripePlans: {
             MONTHLY: {
-                price: 199,
-                priceId: '',
+                price: 499,
+                priceId: env.ENTERPRISE_MONTHLY,
             },
             YEARLY: {
-                price: 2000,
-                priceId: '',
+                price: 4000,
+                priceId: env.ENTERPRISE_YEARLY,
             },
         },
     },
 ];
+
+export const getPlanFromPriceId = (priceId?: string): { plan: TeamPlan; isYearly: boolean } | null => {
+    for (const plan of plans) {      
+        if (plan.stripePlans) {
+            for (const [cycle, pricing] of Object.entries(plan.stripePlans)) {
+                if (pricing.priceId === priceId) {
+                    return { plan: plan.type, isYearly: cycle === 'YEARLY' };
+                }
+            }
+        }
+    }
+
+    return null;
+}

@@ -8,16 +8,17 @@ import { OfferStatus, Organization } from '@prisma/client';
 import { FREE_PLAN, plans } from '@/lib/plans';
 
 const getOfferStateFromTeam = (team: Organization): OfferStatus => {
-    const pricingPlan = plans.find(plan => plan.type === team.plan) ?? FREE_PLAN;
+    const pricingPlan =
+        plans.find((plan) => plan.type === team.plan) ?? FREE_PLAN;
 
     const isInfinite = pricingPlan.maxCuota === -1;
 
     if (!isInfinite && team.offerCuota + 1 > pricingPlan.maxCuota) {
-        return "PENDING"; // will need to pay
+        return 'PENDING'; // will need to pay
     }
 
-    return "DRAFT";
-}
+    return 'DRAFT';
+};
 
 export const offerRoutes = createTRPCRouter({
     create: protectedProcedure
@@ -120,7 +121,7 @@ export const offerRoutes = createTRPCRouter({
                         'manager',
                         'role',
                         'startDate',
-                        'introVideo'
+                        'introVideo',
                     ]),
                 },
             });
@@ -158,9 +159,33 @@ export const offerRoutes = createTRPCRouter({
                 status: z.enum(['PUBLISHED', 'CANCELLED']),
             }),
         )
-        .mutation(({ ctx: { session, prisma }, input }) => {
+        .mutation(async ({ ctx: { prisma }, input }) => {
+            const _offer = await prisma.offer.findUnique({
+                where: {
+                    id: input.offerId,
+                },
+            });
+
             if (input.status === 'PUBLISHED') {
-                // todo check if offer has not been published yet.
+                // only allow incrementing once, in case offer gets cancelled and re-published
+                if (_offer && !_offer?.published) {
+                    await prisma.$transaction([
+                        prisma.offer.update({
+                            where: { id: _offer.id },
+                            data: {
+                                published: true,
+                                status: 'PUBLISHED',
+                                publishedAt: new Date(),
+                            },
+                        }),
+                        prisma.organization.update({
+                            where: { id: _offer.organizationId },
+                            data: { offerCuota: { increment: 1 } },
+                        }),
+                    ]);
+
+                    return { ..._offer, status: "PUBLISHED" } // fake to avoid another prisma query
+                }
             }
 
             return prisma.offer.update({

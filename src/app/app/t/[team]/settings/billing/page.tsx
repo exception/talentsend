@@ -6,9 +6,26 @@ import Link from 'next/link';
 import { APP_URL } from '@/lib/constants';
 import { buttonVariants } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import va from '@vercel/analytics';
+import Usage from './usage';
+import PlanSelectRow from './plan-select';
 
 const TeamSettingsPage = () => {
-    const { team } = useTeam();
+    const { team, refetch } = useTeam();
+    const searchParams = useSearchParams();
+    const [billingSuccess, setBillingSuccess] = useState(false);
+
+    useEffect(() => {
+        if (searchParams?.get('success')) {
+            setBillingSuccess(true);
+            setTimeout(async () => {
+                await refetch();
+                va.track('Upgraded Plan');
+            }, 1000);
+        }
+    }, [searchParams]);
 
     return (
         <SettingsContainer title="Billing">
@@ -22,6 +39,11 @@ const TeamSettingsPage = () => {
         </div>
       </div>
     )} */}
+            {billingSuccess && (
+                <div className="bg-white p-4 border border-neutral-200 rounded-md mb-5">
+                    <h3 className="text-base font-medium">Billing Success!</h3>
+                </div>
+            )}
             <div className="bg-white p-4 border border-neutral-200 flex flex-col md:flex-row md:items-center md:justify-between rounded-md">
                 <div className="space-y-2">
                     <h3 className="text-base font-medium">Manage Billing</h3>
@@ -41,6 +63,7 @@ const TeamSettingsPage = () => {
                     Billing Page
                 </Link>
             </div>
+            <PlanSelectRow />
         </SettingsContainer>
     );
 };

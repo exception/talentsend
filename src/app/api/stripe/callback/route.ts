@@ -59,8 +59,6 @@ export const GET = async (req: Request) => {
                     status: 'DRAFT',
                 },
             });
-
-            // TODO send email
         }
 
         return Response.redirect(

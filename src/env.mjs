@@ -20,8 +20,16 @@ export const env = createEnv({
 
         STRIPE_SECRET_KEY: z.string().min(1),
         STRIPE_ONE_TIME_PAYMENT_ID: z.string().min(1),
+        STRIPE_WEBHOOK_SECRET: z.string().min(1),
+
+        TEAM_PREMIUM_MONTHLY: z.string().min(1),
+        TEAM_PREMIUM_YEARLY: z.string().min(1),
+        ENTERPRISE_MONTHLY: z.string().min(1),
+        ENTERPRISE_YEARLY: z.string().min(1),
+        TEAM_PREMIUM_OVERAGE_PRICE_ID: z.string().min(1),
 
         LOOPS_API_KEY: z.string().min(1),
+        DISCORD_WEBHOOK_URL: z.string().optional(),
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -35,7 +43,16 @@ export const env = createEnv({
         NGROK_URL: process.env.NGROK_URL,
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         STRIPE_ONE_TIME_PAYMENT_ID: process.env.STRIPE_ONE_TIME_PAYMENT_ID,
+        STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
 
         LOOPS_API_KEY: process.env.LOOPS_API_KEY,
+        DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
+
+        TEAM_PREMIUM_MONTHLY: process.env.TEAM_PREMIUM_MONTHLY,
+        TEAM_PREMIUM_YEARLY: process.env.TEAM_PREMIUM_YEARLY,
+        TEAM_PREMIUM_OVERAGE_PRICE_ID:
+            process.env.TEAM_PREMIUM_OVERAGE_PRICE_ID,
+        ENTERPRISE_MONTHLY: process.env.ENTERPRISE_MONTHLY,
+        ENTERPRISE_YEARLY: process.env.ENTERPRISE_YEARLY,
     },
 });

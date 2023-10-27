@@ -10,6 +10,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import {
     Check,
     Clipboard,
+    Loader2,
     Pencil,
     SendHorizonal,
     SparkleIcon,
@@ -28,12 +29,12 @@ interface OfferPageProps {
     };
 }
 
-const canCancel = (status: OfferStatus) => {
-    return status === 'PUBLISHED' || status === 'ACCEPTED';
-};
-
 const canPublish = (status: OfferStatus) => {
     return status === 'CANCELLED' || status === 'DRAFT';
+};
+
+const canEdit = (status: OfferStatus) => {
+    return status === 'DRAFT' || status === 'CANCELLED';
 };
 
 const OfferPage = ({ params }: OfferPageProps) => {
@@ -44,6 +45,7 @@ const OfferPage = ({ params }: OfferPageProps) => {
         offerId: params.id,
         orgId: team.id,
     });
+    const [clickedPay, setClickedPay] = useState(false);
 
     const publishMutation = trpc.offers.changeStatus.useMutation({
         async onSuccess() {
@@ -65,47 +67,57 @@ const OfferPage = ({ params }: OfferPageProps) => {
                 title={`Offer for ${data.targetFirstName} ${data.targetLastName}`}
                 renderChild={() => (
                     <div className="flex flex-row space-x-2">
-                        {canCancel(data.status) && (
-                            <Button
-                                onClick={async () => {
-                                    setCopied(true);
-                                    await navigator.clipboard.writeText(
-                                        `${APP_URL}/offer/${data.id}`,
-                                    );
-                                    toast({
-                                        title: 'Copied link to clipboard!',
-                                    });
+                        {data.status === 'PUBLISHED' ||
+                            (data.status === 'ACCEPTED' && (
+                                <Button
+                                    onClick={async () => {
+                                        setCopied(true);
+                                        await navigator.clipboard.writeText(
+                                            `${APP_URL}/offer/${data.id}`,
+                                        );
+                                        toast({
+                                            title: 'Copied link to clipboard!',
+                                        });
 
-                                    setTimeout(() => {
-                                        setCopied(false);
-                                    }, 2500);
-                                }}
-                                variant="outline"
-                                icon={
-                                    copied ? (
-                                        <Check className="h-4 w-4" />
-                                    ) : (
-                                        <Clipboard className="h-4 w-4" />
-                                    )
-                                }
+                                        setTimeout(() => {
+                                            setCopied(false);
+                                        }, 2500);
+                                    }}
+                                    variant="outline"
+                                    icon={
+                                        copied ? (
+                                            <Check className="h-4 w-4" />
+                                        ) : (
+                                            <Clipboard className="h-4 w-4" />
+                                        )
+                                    }
+                                >
+                                    {copied ? 'Copied' : 'Copy'}
+                                </Button>
+                            ))}
+                        {canEdit(data.status) && (
+                            <Link
+                                className={buttonVariants({
+                                    variant: 'outline',
+                                })}
+                                href={`/t/${team.slug}/offer/${data.id}/edit`}
                             >
-                                {copied ? 'Copied' : 'Copy'}
-                            </Button>
+                                <Pencil className="h-4 w-4" />
+                            </Link>
                         )}
-                        <Link
-                            className={buttonVariants({ variant: 'outline' })}
-                            href={`/t/${team.slug}/offer/${data.id}/edit`}
-                        >
-                            <Pencil className="h-4 w-4" />
-                        </Link>
                         {data.status === 'PENDING' && (
                             <Link
                                 className={buttonVariants({
                                     variant: 'default',
                                 })}
                                 href={`/api/stripe/publish?orgId=${team.id}&offerId=${data.id}`}
+                                onClick={() => setClickedPay(true)}
                             >
-                                <SparkleIcon className="h-4 w-4" />
+                                {clickedPay ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <SparkleIcon className="h-4 w-4" />
+                                )}
                                 <p>Pay & Draft</p>
                             </Link>
                         )}
@@ -123,7 +135,7 @@ const OfferPage = ({ params }: OfferPageProps) => {
                                 Publish
                             </Button>
                         )}
-                        {canCancel(data.status) && (
+                        {data.status === 'PUBLISHED' && (
                             <Button
                                 onClick={() =>
                                     publishMutation.mutate({

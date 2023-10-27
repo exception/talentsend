@@ -4,7 +4,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
 import { useScroll } from '@/lib/hooks/use-scroll';
 import { cn } from '@/lib/utils';
-import { Organization, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -29,10 +29,6 @@ const helper = (
             title: 'Branding',
         },
         {
-            href: `/t/${team.slug}/settings/billing`,
-            title: 'Billing',
-        },
-        {
             href: `/t/${team.slug}/settings/benefits`,
             title: 'Benefits',
         },
@@ -45,6 +41,10 @@ const helper = (
     if (role != 'MEMBER') {
         return [
             ...base,
+            {
+                href: `/t/${team.slug}/settings/billing`,
+                title: 'Billing',
+            },
             {
                 href: `/t/${team.slug}/settings/members`,
                 title: 'Members',

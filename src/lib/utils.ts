@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { type Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 import { APP_URL } from "./constants";
+import { string } from "zod";
+import { env } from "@/env.mjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -76,4 +78,42 @@ export const nFormatter = (
   return item
     ? (num / item.value).toFixed(opts.digits).replace(rx, "$1") + item.symbol
     : "0";
+}
+
+export const getLastDayOfMonth = () => {
+  const today = new Date();
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0); // This will give the last day of the current month
+  return lastDay.getDate();
+};
+
+// Adjust the billingCycleStart based on the number of days in the current month
+export const getAdjustedBillingCycleStart = (billingCycleStart: number) => {
+  const lastDay = getLastDayOfMonth();
+  if (billingCycleStart > lastDay) {
+    return lastDay;
+  } else {
+    return billingCycleStart;
+  }
+};
+
+export const log = async({ message, mention = false }: { message: string; mention?: boolean }) => {
+  const hook = env.DISCORD_WEBHOOK_URL;
+  if (env.NODE_ENV === "development") {
+    console.log(message);
+  }
+
+  if (!hook) return;
+  try {
+    return await fetch(hook, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: `${mention ? "<@128286074769375232> " : ""}${message}`
+      })
+    })
+  } catch (e) {
+    console.log(`Failed to log to Talentsend Discord. Error ${e}`);
+  }
 }
