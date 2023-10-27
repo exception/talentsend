@@ -8,9 +8,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import { useTeam } from '../layout';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,57 +19,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { SaveIcon } from 'lucide-react';
-import { trpc } from '@/lib/providers/trpc-provider';
-import { useToast } from '@/components/ui/use-toast';
+import { AboutFormSchema } from './page';
 
-const formSchema = z.object({
-    mission: z.string().optional(),
-    about: z.string().optional(),
-    size: z
-        .enum(['1-10', '10-49', '49-99', '99-199', '200-499', '500+'])
-        .optional(),
-    location: z.string().optional(),
-    funding: z.number().optional(),
-    website: z.string().url().optional(),
-});
+interface AboutFormProps {
+    form: UseFormReturn<AboutFormSchema>;
+    handleSubmit: SubmitHandler<AboutFormSchema>;
+}
 
-const TeamAboutForm = () => {
-    const { team, refetch } = useTeam();
-    const teamAbout = formSchema.parse(team.about ?? {});
-    const { toast } = useToast();
-
-    const updateAboutMutation = trpc.organization.update.useMutation({
-        async onSuccess() {
-            await refetch();
-            toast({
-                title: 'Saved!',
-            });
-        },
-        onError() {
-            toast({
-                title: 'Failed to save',
-                variant: 'destructive',
-            });
-        },
-    });
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: teamAbout,
-    });
-
-    const handleSubmit = (data: z.infer<typeof formSchema>) => {
-        updateAboutMutation.mutate({
-            slug: team.slug,
-            about: data,
-        });
-    };
+const TeamAboutForm = ({ form, handleSubmit }: AboutFormProps) => {
+    const { team } = useTeam();
 
     return (
         <Form {...form}>
             <form
+                id="about-form"
                 className="w-full space-y-2 flex-col flex"
                 onSubmit={form.handleSubmit(handleSubmit)}
             >
@@ -173,16 +134,6 @@ const TeamAboutForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button
-                    className="self-end"
-                    icon={<SaveIcon className="h-4 w-4" />}
-                    disabled={
-                        !form.formState.isValid || !form.formState.isDirty
-                    }
-                    loading={updateAboutMutation.isLoading}
-                >
-                    Save
-                </Button>
             </form>
         </Form>
     );

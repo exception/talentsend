@@ -81,7 +81,8 @@ const PlanSelectRow = () => {
                             {clicked && (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                             )}
-                            Upgrade to {planData.title} {planData.period}ly
+                            Upgrade to {planData.title} {title(planData.period)}
+                            ly
                         </Link>
                         <Button
                             variant="link"
@@ -104,9 +105,11 @@ const PlanSelectRow = () => {
                 </div>
             </Modal>
 
-            <div className="space-y-4 mt-4">
-                <Separator />
-                <h3 className="text-base font-medium">Your Plan</h3>
+            <div className="space-y-2">
+                <div className="flex flex-row items-center justify-between">
+                    <h3 className="text-lg font-medium">Your Plan</h3>
+                    <Badge>{team.plan}</Badge>
+                </div>
                 <Usage />
                 <div className="flex flex-row items-center justify-between">
                     <p className="text-sm text-neutral-500">
