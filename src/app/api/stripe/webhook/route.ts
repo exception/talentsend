@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
     const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
     let event: Stripe.Event;
     try {
-        if (!sig || !webhookSecret) return;
+        if (!sig || !webhookSecret) return NextResponse.json({ received: true });;
         event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err) {
         // @ts-expect-error
@@ -34,7 +34,7 @@ export const POST = async (req: Request) => {
             if (event.type === 'checkout.session.completed') {
                 const checkoutSession = event.data
                     .object as Stripe.Checkout.Session;
-                if (checkoutSession.mode === 'payment') return; // we don't care about one time payments
+                if (checkoutSession.mode === 'payment') return NextResponse.json({ received: true });; // we don't care about one time payments
 
                 if (
                     checkoutSession.client_reference_id === null ||
@@ -44,7 +44,7 @@ export const POST = async (req: Request) => {
                         message: 'Missing items in Stripe webhook Callback',
                         mention: true,
                     });
-                    return;
+                    return NextResponse.json({ received: true });;
                 }
 
                 await prisma.organization.update({
@@ -104,7 +104,7 @@ export const POST = async (req: Request) => {
                         message: `Team not found in Stripe webhook \`customer.subscription.deleted\` callback (${stripeCustomerId})`,
                         mention: true,
                     });
-                    return;
+                    return NextResponse.json({ received: true });;
                 }
 
                 await Promise.all([
