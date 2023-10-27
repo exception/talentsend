@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { useTeam } from '../layout';
 import TeamAboutForm from './form';
 import { z } from 'zod';
@@ -57,7 +57,7 @@ const TeamAboutSettingsPage = () => {
     };
 
     return (
-        <SettingsContainer
+        <Container
             title={`About ${team.name}`}
             renderChild={() => (
                 <Button
@@ -74,7 +74,7 @@ const TeamAboutSettingsPage = () => {
             )}
         >
             <TeamAboutForm form={form} handleSubmit={handleSubmit} />
-        </SettingsContainer>
+        </Container>
     );
 };
 

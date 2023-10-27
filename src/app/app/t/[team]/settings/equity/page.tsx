@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -39,7 +39,7 @@ const EquityPage = () => {
     };
 
     return (
-        <SettingsContainer
+        <Container
             title="Equity"
             renderChild={() => (
                 <Button
@@ -55,7 +55,7 @@ const EquityPage = () => {
             )}
         >
             <EquityForm form={form} handleSubmit={handleSubmit} />
-        </SettingsContainer>
+        </Container>
     );
 };
 

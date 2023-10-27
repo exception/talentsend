@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { useSession } from 'next-auth/react';
 import { useTeam } from '../../layout';
 import { redirect } from 'next/navigation';
@@ -17,7 +17,7 @@ const DangerPage = () => {
         return redirect(`/t/${team.slug}/settings`);
     }
 
-    return <SettingsContainer title="Danger Zone"></SettingsContainer>;
+    return <Container title="Danger Zone"></Container>;
 };
 
 export default DangerPage;

@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { useTeam } from '../../layout';
 import TeamMembers from './members';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ const TeamMembersPage = () => {
                     close={() => setIsOpen(false)}
                 />
             </Modal>
-            <SettingsContainer
+            <Container
                 title="Members"
                 renderChild={() => (
                     <Button
@@ -33,7 +33,7 @@ const TeamMembersPage = () => {
                 )}
             >
                 <TeamMembers />
-            </SettingsContainer>
+            </Container>
         </>
     );
 };

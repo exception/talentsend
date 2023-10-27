@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { useTeam } from '../layout';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,13 +14,13 @@ const AppsPage = () => {
     });
 
     if (installedApps.isLoading) {
-        <SettingsContainer title="Apps">
+        <Container title="Apps">
             <Skeleton className="w-full h-40" />
-        </SettingsContainer>;
+        </Container>;
     }
 
     return (
-        <SettingsContainer
+        <Container
             title="Apps"
             renderChild={() => (
                 <Button disabled icon={<Search className="h-4 w-4" />}>
@@ -42,7 +42,7 @@ const AppsPage = () => {
                     </h1>
                 </div>
             )}
-        </SettingsContainer>
+        </Container>
     );
 };
 

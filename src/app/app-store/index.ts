@@ -17,6 +17,6 @@ export abstract class App {
     }
 
     _defaultInstallRedirect(teamSlug: string): Response {
-        return NextResponse.redirect(`${APP_URL}/t/${teamSlug}/settings/apps/${this.appId}/installed`);
+        return NextResponse.redirect(`${APP_URL}/t/${teamSlug}/apps/${this.appId}/installed`);
     }
 }

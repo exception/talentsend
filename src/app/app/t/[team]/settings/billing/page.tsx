@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { useTeam } from '../../layout';
 import Link from 'next/link';
 import { APP_URL } from '@/lib/constants';
@@ -28,7 +28,7 @@ const TeamSettingsPage = () => {
     }, [searchParams]);
 
     return (
-        <SettingsContainer
+        <Container
             title="Billing"
             renderChild={() => (
                 <Link
@@ -60,7 +60,7 @@ const TeamSettingsPage = () => {
                 </div>
             )}
             <PlanSelectRow />
-        </SettingsContainer>
+        </Container>
     );
 };
 

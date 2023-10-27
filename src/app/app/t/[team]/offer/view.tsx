@@ -12,6 +12,8 @@ import { trpc } from '@/lib/providers/trpc-provider';
 import { Offer } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import va from '@vercel/analytics';
+import Container from '@/components/ui/container';
+import MaxWidthContainer from '@/components/app/max-width-container';
 
 interface OfferPageProps {
     offer?: Offer;
@@ -81,48 +83,39 @@ const OfferView = ({ offer }: OfferPageProps) => {
     };
 
     return (
-        <div className="flex flex-col px-2.5 lg:px-20 py-5">
-            <div className="w-full rounded-t-md border border-neutral-300 bg-white p-4 flex justify-between items-center">
-                <h2 className="font-semibold text-lg flex items-center space-x-2">
-                    <Link
-                        href={
-                            offer
-                                ? `/t/${team.slug}/offer/${offer.id}`
-                                : `/t/${team.slug}`
+        <MaxWidthContainer className="mt-5">
+            <Container
+                backUrl={
+                    offer
+                        ? `/t/${team.slug}/offer/${offer.id}`
+                        : `/t/${team.slug}`
+                }
+                title={offer ? 'Edit Offer' : 'Create an Offer Letter'}
+                renderChild={() => (
+                    <Button
+                        form="new-offer-form"
+                        icon={
+                            offer ? (
+                                <SaveIcon className="h-4 w-4" />
+                            ) : (
+                                <SendHorizonal className="h-4 w-4" />
+                            )
                         }
-                        className={buttonVariants({
-                            variant: 'ghost',
-                            className: 'shrink-0 grow-0',
-                        })}
+                        // disabled={
+                        //     !form.formState.isValid || !form.formState.isDirty
+                        // }
+                        loading={
+                            createOfferMutation.isLoading ||
+                            editOfferMutation.isLoading
+                        }
                     >
-                        <ArrowLeft className="h-4 w-4" />
-                    </Link>
-                    {offer ? 'Edit Offer' : 'Create an Offer Leter'}
-                </h2>
-                <Button
-                    form="new-offer-form"
-                    icon={
-                        offer ? (
-                            <SaveIcon className="h-4 w-4" />
-                        ) : (
-                            <SendHorizonal className="h-4 w-4" />
-                        )
-                    }
-                    // disabled={
-                    //     !form.formState.isValid || !form.formState.isDirty
-                    // }
-                    loading={
-                        createOfferMutation.isLoading ||
-                        editOfferMutation.isLoading
-                    }
-                >
-                    {offer ? 'Edit' : 'Create'}
-                </Button>
-            </div>
-            <div className="w-full rounded-b-md border border-neutral-300 bg-neutral-50 border-t-0 border-dashed p-4">
+                        {offer ? 'Edit' : 'Create'}
+                    </Button>
+                )}
+            >
                 <NewOfferForm form={form} handleSubmit={handleSubmit} />
-            </div>
-        </div>
+            </Container>
+        </MaxWidthContainer>
     );
 };
 

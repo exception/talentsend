@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import { useTeam } from '../../layout';
 import { Button, buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ const BenefitsPage = () => {
     const { team } = useTeam();
 
     return (
-        <SettingsContainer
+        <Container
             title="Benefit Packages"
             renderChild={() => (
                 <Link
@@ -57,7 +57,7 @@ const BenefitsPage = () => {
                     })}
                 </div>
             )}
-        </SettingsContainer>
+        </Container>
     );
 };
 

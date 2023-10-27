@@ -24,7 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
 import { AppRouter } from '@/server/root';
-import SettingsContainer from '../../settings/settings-container';
+import Container from '../../../../components/ui/container';
 import MaxWidthContainer from '@/components/app/max-width-container';
 import {
     DropdownMenu,
@@ -293,7 +293,7 @@ const TeamPage = () => {
 
     return (
         <MaxWidthContainer className="mt-5">
-            <SettingsContainer
+            <Container
                 title={`${team.name}'s Offers`}
                 renderChild={() => (
                     <div className="flex flex-row items-center space-x-2">
@@ -326,7 +326,7 @@ const TeamPage = () => {
                         team={team}
                     />
                 </div>
-            </SettingsContainer>
+            </Container>
         </MaxWidthContainer>
     );
 };

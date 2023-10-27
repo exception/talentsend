@@ -1,6 +1,6 @@
 import { makeMetadata } from '@/lib/utils';
 import AccountSettingsForm from './form';
-import SettingsContainer from './settings-container';
+import Container from '../../../components/ui/container';
 import UploadAvatarRow from './upload-avatar';
 
 export const metadata = makeMetadata({
@@ -9,10 +9,10 @@ export const metadata = makeMetadata({
 
 const AccountSettings = () => {
     return (
-        <SettingsContainer title="Account">
+        <Container title="Account">
             <UploadAvatarRow />
             <AccountSettingsForm />
-        </SettingsContainer>
+        </Container>
     );
 };
 

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTeam } from '../../layout';
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import MaxWidthContainer from '@/components/app/max-width-container';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -63,7 +63,7 @@ const OfferPage = ({ params }: OfferPageProps) => {
 
     return (
         <MaxWidthContainer className="py-5">
-            <SettingsContainer
+            <Container
                 title={`Offer for ${data.targetFirstName} ${data.targetLastName}`}
                 renderChild={() => (
                     <div className="flex flex-row space-x-2">
@@ -153,7 +153,7 @@ const OfferPage = ({ params }: OfferPageProps) => {
                 )}
             >
                 <PublicOfferView offer={data} showAcceptOffer={false} />
-            </SettingsContainer>
+            </Container>
         </MaxWidthContainer>
     );
 };

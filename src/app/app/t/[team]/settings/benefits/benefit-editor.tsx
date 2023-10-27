@@ -21,7 +21,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useTeam } from '../../layout';
 import { useRouter } from 'next/navigation';
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 
 const formSchema = z.object({
     name: z.string(),
@@ -109,7 +109,7 @@ const BenefitEditor = ({ benefit }: BenefitPageProps) => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col w-full"
             >
-                <SettingsContainer
+                <Container
                     title={
                         benefit
                             ? 'Edit Benefit Package'
@@ -249,7 +249,7 @@ const BenefitEditor = ({ benefit }: BenefitPageProps) => {
                             </div>
                         </div>
                     ))}
-                </SettingsContainer>
+                </Container>
             </form>
         </Form>
     );

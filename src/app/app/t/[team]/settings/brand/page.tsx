@@ -1,6 +1,6 @@
 'use client';
 
-import SettingsContainer from '@/app/app/settings/settings-container';
+import Container from '@/components/ui/container';
 import UploadImageRow from '../upload-image-row';
 import BrandColorsForm from './colors-form';
 import OfferLetterForm from './offer-letter-form';
@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 
 const TeamBrandSettings = () => {
     return (
-        <SettingsContainer title="Branding">
+        <Container title="Branding">
             <UploadImageRow />
             <div className="mb-4 ">
                 <h2 className="font-semibold text-base">Colors</h2>
@@ -20,7 +20,7 @@ const TeamBrandSettings = () => {
                 <Separator className="my-2" />
                 <OfferLetterForm />
             </div>
-        </SettingsContainer>
+        </Container>
     );
 };
 
