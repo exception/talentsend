@@ -161,29 +161,25 @@ const PlanSelectRow = () => {
                     <Badge>{team.plan}</Badge>
                 </div>
                 <Usage />
-                {team.plan != 'FREE' && (
-                    <div className="w-full p-4 rounded-md border border-neutral-200 bg-white flex flex-row justify-between items-center mt-5">
-                        <h3 className="text-base font-medium">Billing Cycle</h3>
-                        <div className="flex flex-row items-center space-x-2">
-                            {billingCycle?.start && (
+                {team.plan != 'FREE' &&
+                    billingCycle?.start &&
+                    billingCycle?.end && (
+                        <div className="w-full p-4 rounded-md border border-neutral-200 bg-white flex flex-row justify-between items-center mt-5">
+                            <h3 className="text-base font-medium">
+                                Billing Cycle
+                            </h3>
+                            <div className="flex flex-row items-center space-x-2">
                                 <Badge>
                                     {format(billingCycle.start, 'dd MMM, yyyy')}
                                 </Badge>
-                            )}
-                            {billingCycle?.end && (
-                                <>
-                                    <p className="font-medium">-</p>
-                                    <Badge>
-                                        {format(
-                                            billingCycle.end,
-                                            'dd MMM, yyyy',
-                                        )}
-                                    </Badge>
-                                </>
-                            )}
+
+                                <p className="font-medium">-</p>
+                                <Badge>
+                                    {format(billingCycle.end, 'dd MMM, yyyy')}
+                                </Badge>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
                 <div className="flex flex-row items-center justify-between">
                     {team.plan === 'FREE' && (
                         <p className="text-sm text-neutral-500">
@@ -200,13 +196,15 @@ const PlanSelectRow = () => {
                             plan.
                         </p>
                     )}
-                    <Button
-                        variant="outline"
-                        onClick={() => setUpgradeModal(true)}
-                        size="sm"
-                    >
-                        Upgrade
-                    </Button>
+                    {team.plan !== 'ENTERPRISE' && (
+                        <Button
+                            variant="outline"
+                            onClick={() => setUpgradeModal(true)}
+                            size="sm"
+                        >
+                            Upgrade
+                        </Button>
+                    )}
                 </div>
             </div>
         </>
