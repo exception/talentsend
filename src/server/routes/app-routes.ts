@@ -4,8 +4,8 @@ import { get } from "@vercel/edge-config";
 
 export const appRoutes = createTRPCRouter({
     availableApps: protectedProcedure.query(async () => {
-        const appStoreDisabled = await get("appStore.disabled");
-        if (appStoreDisabled) return [];
+        const appStore = (await get("appStore")) as { disabled: boolean };
+        if (appStore.disabled) return [];
 
         return getAllApps();
     })

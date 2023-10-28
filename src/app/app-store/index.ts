@@ -41,8 +41,10 @@ export abstract class App {
     async isPublished(): Promise<boolean> {
         if (process.env.NODE_ENV !== "production") return true;
 
-        const enabled = await get(`appStore.apps.${this.appId}.enabled`);
-        if (enabled) return true;
+        const appStore = (await get("appStore")) as { apps: Record<string, { enabled: boolean; }> };
+        if (appStore.apps[this.appId]?.enabled) {
+            return true;
+        }
 
         return false;
     }
