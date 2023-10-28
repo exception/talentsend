@@ -1,5 +1,5 @@
 import { prisma } from '@/db';
-import { ActionContext, App, FunctionArguments } from '..';
+import { App, FunctionArguments } from '..';
 import { NextResponse } from 'next/server';
 import { APP_URL_SECURE } from '@/lib/constants';
 import { z } from 'zod';
@@ -29,7 +29,6 @@ export class SlackApp extends App {
 
     async callback({ req, context }: FunctionArguments): Promise<Response> {
         const url = new URL(req.url);
-        console.log(url.searchParams);
         const { code } = oauthQueryParams.parse(
             Object.fromEntries(url.searchParams),
         );

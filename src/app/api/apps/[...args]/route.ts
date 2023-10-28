@@ -50,16 +50,27 @@ export async function GET(req: Request) {
     try {
         const app = getAppById(appId);
         if (!app) {
-            return NextResponse.redirect(`${APP_URL}/t/${team.slug}/settings/apps?error=Unknown app.`)
+            return NextResponse.redirect(`${APP_URL}/t/${team.slug}/apps?error=Unknown app.`)
         }
 
         if (action === "install") {
+            const installedApp = await prisma.installedApp.findFirst({
+                where: {
+                    appId,
+                    organizationId: team.id
+                }
+            });
+
+            if (installedApp) {
+                return NextResponse.redirect(`${APP_URL}/t/${team.slug}/apps/${appId}`);
+            }
+
             return app.install({ req: req, context: { user: session.user, team } });
         } else if (action === "callback") {
             return app.callback({ req: req, context: { user: session.user, team } });
         }
 
-        return NextResponse.redirect(`${APP_URL}/t/${team.slug}/settings/apps?error=Unhandled action.`)
+        return NextResponse.redirect(`${APP_URL}/t/${team.slug}/apps?error=Unhandled action.`)
     } catch (err) {
         console.error(err);
         return NextResponse.json({ error: err });
