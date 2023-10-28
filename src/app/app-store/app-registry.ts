@@ -10,7 +10,10 @@ export const getAppById = (appId?: string) => {
     return registryMap[appId];
 }
 
-export const getAllApps = (): App[] => {
-    return [];
-    // return Object.values(registryMap);
-}
+export const getAllApps = async (): Promise<App[]> => {
+    const allApps = Object.values(registryMap);
+    const publishStatuses = await Promise.all(allApps.map(app => app.isPublished()));
+    
+    return allApps.filter((app, index) => publishStatuses[index]);
+  };
+  

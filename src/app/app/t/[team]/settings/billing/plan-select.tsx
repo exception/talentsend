@@ -185,10 +185,21 @@ const PlanSelectRow = () => {
                     </div>
                 )}
                 <div className="flex flex-row items-center justify-between">
-                    <p className="text-sm text-neutral-500">
-                        Need higher limits? Upgrade to the Premium or Enterprise
-                        plans.
-                    </p>
+                    {team.plan === 'FREE' && (
+                        <p className="text-sm text-neutral-500">
+                            Need higher limits? Upgrade to the{' '}
+                            <span className="font-semibold">Premium</span> or{' '}
+                            <span className="font-semibold">Enterprise</span>{' '}
+                            plans.
+                        </p>
+                    )}
+                    {team.plan === 'PREMIUM' && (
+                        <p className="text-sm text-neutral-500">
+                            Need to send unlimited offers? Upgrade to the{' '}
+                            <span className="font-semibold">Enterprise</span>{' '}
+                            plan.
+                        </p>
+                    )}
                     <Button
                         variant="outline"
                         onClick={() => setUpgradeModal(true)}

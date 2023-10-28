@@ -332,4 +332,21 @@ export const organizationRoutes = createTRPCRouter({
                 },
             });
         }),
+    appData: protectedProcedure
+        .input(
+            z.object({
+                teamId: z.string(),
+                appId: z.string(),
+            }),
+        )
+        .query(({ ctx: { prisma }, input }) => {
+            return prisma.installedApp.findUnique({
+                where: {
+                    appId_organizationId: {
+                        appId: input.appId,
+                        organizationId: input.teamId,
+                    },
+                },
+            });
+        }),
 });

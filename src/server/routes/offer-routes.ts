@@ -6,6 +6,7 @@ import { sendEmail } from '@/lib/loops';
 import { APP_URL } from '@/lib/constants';
 import { OfferStatus, Organization } from '@prisma/client';
 import { FREE_PLAN, plans } from '@/lib/plans';
+import { handleAppsOfferAccept } from '@/app/app-store/lib';
 
 const getOfferStateFromTeam = (team: Organization): OfferStatus => {
     const pricingPlan =
@@ -213,15 +214,6 @@ export const offerRoutes = createTRPCRouter({
                         select: {
                             name: true,
                         },
-                        include: {
-                            installedApps: {
-                                where: {
-                                    appId: {
-                                        in: ["slack"]
-                                    }
-                                }
-                            }
-                        }
                     },
                     createdBy: {
                         select: {
@@ -245,9 +237,7 @@ export const offerRoutes = createTRPCRouter({
                 });
             }
 
-            if (offerWithTeam.organization.installedApps && offerWithTeam.organization.installedApps.length > 0) {
-                // TOOD handle offer alert apps.
-            }
+            void handleAppsOfferAccept(offerWithTeam, offerWithTeam.organizationId);
 
             void sendEmail({
                 type: 'OFFER_ACCEPTED_CANDIDATE',
