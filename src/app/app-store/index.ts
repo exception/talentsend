@@ -41,9 +41,11 @@ export abstract class App {
     async isPublished(): Promise<boolean> {
         if (process.env.NODE_ENV !== "production") return true;
 
-        const isPresent = await get(`app-disable:${this.appId}`);
-        if (isPresent) return false;
+        const enabledApps = await get(`enabledApps`);
+        if (enabledApps && Array.isArray(enabledApps)) {
+            return enabledApps.includes(this.appId);
+        }
 
-        return true;
+        return false;
     }
 }
