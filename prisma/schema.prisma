@@ -198,5 +198,7 @@ model InstalledApp {
 
   installedAt DateTime @default(now())
 
+  @@unique([appId, organizationId])
   @@index([organizationId])
+  @@index([appId])
 }

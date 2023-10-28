@@ -16,8 +16,6 @@ export async function GET(req: Request) {
       return new Response(null, { status: 403 });
     }
 
-    console.log(req);
-
     const url = new URL(req.url);
 
     const args = url.pathname.replace("/api/apps/", "").split("/");
@@ -56,9 +54,9 @@ export async function GET(req: Request) {
         }
 
         if (action === "install") {
-            return app.install(req, { user: session.user, team });
+            return app.install({ req: req, context: { user: session.user, team } });
         } else if (action === "callback") {
-            return app.callback(req, { user: session.user, team });
+            return app.callback({ req: req, context: { user: session.user, team } });
         }
 
         return NextResponse.redirect(`${APP_URL}/t/${team.slug}/settings/apps?error=Unhandled action.`)

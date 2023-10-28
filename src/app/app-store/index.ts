@@ -7,16 +7,25 @@ export interface ActionContext {
     team: Organization;
 }
 
+export interface FunctionArguments {
+    req: Request;
+    context: ActionContext;
+}
+
 export abstract class App {
     constructor(public readonly name: string, public readonly appId: string, public readonly requiredPlans: TeamPlan[], public readonly appLogoUrl: string) {}
 
-    abstract install(req: Request, context: ActionContext): Promise<Response>;
+    abstract install(args: FunctionArguments): Promise<Response>;
 
-    callback(req: Request, context: ActionContext): Promise<Response> {
+    callback(args: FunctionArguments): Promise<Response> {
         return Promise.resolve(NextResponse.json({ received: true }));
     }
 
     _defaultInstallRedirect(teamSlug: string): Response {
-        return NextResponse.redirect(`${APP_URL}/t/${teamSlug}/apps/${this.appId}/installed`);
+        return NextResponse.redirect(`${APP_URL}/t/${teamSlug}/apps/${this.appId}?installed=true`);
+    }
+
+    _defaultErrorRedirect(teamSlug: string, error: string): Response {
+        return NextResponse.redirect(`${APP_URL}/t/${teamSlug}/apps/${this.appId}?error=${error}`);
     }
 }

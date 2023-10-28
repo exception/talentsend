@@ -10,6 +10,7 @@ export const getAppById = (appId?: string) => {
     return registryMap[appId];
 }
 
-export const getAllApps = () => {
-    return Object.values(registryMap);
+export const getAllApps = (): App[] => {
+    return [];
+    // return Object.values(registryMap);
 }

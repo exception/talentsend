@@ -16,12 +16,12 @@ const SpecificAppPage = ({ params }: Props) => {
     const { team } = useTeam();
 
     if (!app) {
-        return redirect(`/t/${team.slug}/apps/app-store`);
+        return redirect(`/t/${team.slug}/apps`);
     }
 
     return (
         <Container
-            backUrl={`/t/${team.slug}/apps/app-store`}
+            backUrl={`/t/${team.slug}/apps`}
             title={`${app.name} App`}
         ></Container>
     );

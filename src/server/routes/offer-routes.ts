@@ -213,6 +213,15 @@ export const offerRoutes = createTRPCRouter({
                         select: {
                             name: true,
                         },
+                        include: {
+                            installedApps: {
+                                where: {
+                                    appId: {
+                                        in: ["slack"]
+                                    }
+                                }
+                            }
+                        }
                     },
                     createdBy: {
                         select: {
@@ -234,6 +243,10 @@ export const offerRoutes = createTRPCRouter({
                         offerLink: `${APP_URL}/offer/${offerWithTeam.id}`,
                     },
                 });
+            }
+
+            if (offerWithTeam.organization.installedApps && offerWithTeam.organization.installedApps.length > 0) {
+                // TOOD handle offer alert apps.
             }
 
             void sendEmail({
