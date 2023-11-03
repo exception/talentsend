@@ -10,7 +10,6 @@ import {
     ExternalLink,
     Filter,
     ListRestart,
-    Pencil,
     Plus,
     SendHorizonal,
 } from 'lucide-react';
@@ -189,24 +188,6 @@ const CardContent = ({
                 })}
             </tbody>
         </table>
-        // <div className="flex flex-col">
-        //     {data.map((offer) => (
-        // <Link
-        //     href={`/t/${team.slug}/offer/${offer.id}`}
-        //     className="p-4 bg-white rounded-md border border-neutral-200 flex items-center justify-between group"
-        // >
-        //     <div className="flex flex-col">
-        //         <p className="text-base font-medium">
-        //             Offer for {offer.targetName}
-        //         </p>
-        //         <p className="text-sm text-neutral-400">
-        //             {offer.targetEmail}
-        //         </p>
-        //     </div>
-        //     <ChevronRight className="h-6 w-6 text-neutral-400 opacity-0 group-hover:opacity-100 transition-all" />
-        // </Link>
-        //     ))}
-        // </div>
     );
 };
 

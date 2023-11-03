@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { title } from 'radash';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 
 const AppCard = ({
     team,
@@ -66,7 +67,7 @@ const AppCard = ({
     }, [hasInstalled, installing, loading]);
 
     return (
-        <div className="rounded-md flex flex-col bg-white p-4 border border-neutral-200 col-span-2 space-y-2">
+        <div className="rounded-md flex flex-col bg-white p-4 border border-neutral-200 col-span-2 space-y-4">
             <div className="flex flex-row items-start justify-between">
                 <div className="flex flex-col space-y-2">
                     <div className="flex flex-row items-center space-x-2">
@@ -99,6 +100,7 @@ const AppCard = ({
                     alt={`${app.metadata.name} Logo`}
                 />
             </div>
+            <Separator className="my-2" />
             {renderButton}
         </div>
     );

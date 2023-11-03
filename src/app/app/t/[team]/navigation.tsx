@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 const helper = (
     team: TeamType,
     user?: User,
-): { href: string; title: string; matches?: string[] }[] => {
+): { href: string; title: string; matches?: (str: string) => boolean }[] => {
     const base = [
         {
             href: `/t/${team.slug}`,
@@ -28,35 +28,21 @@ const helper = (
         return [
             ...base,
             {
-                href: `/t/${team.slug}/settings`,
-                title: 'Settings',
-                matches: [
-                    `/t/${team.slug}/settings/about`,
-                    `/t/${team.slug}/settings/billing`,
-                    `/t/${team.slug}/settings/brand`,
-                    `/t/${team.slug}/settings/danger`,
-                    `/t/${team.slug}/settings/members`,
-                    `/t/${team.slug}/settings/benefits`,
-                    `/t/${team.slug}/settings/equity`,
-                    `/t/${team.slug}/settings/apps`,
-                ],
-            },
-            {
                 href: `/t/${team.slug}/apps`,
                 title: 'Apps',
+                matches: (str) => {
+                    return str.startsWith(`/t/${team.slug}/apps/`);
+                },
+            },
+            {
+                href: `/t/${team.slug}/settings`,
+                title: 'Settings',
+                matches: (str) => {
+                    return str.startsWith(`/t/${team.slug}/settings/`);
+                },
             },
         ];
     }
-
-    // if (team.slug === 'commsor') {
-    //     return [
-    //         ...base,
-    //         {
-    //             href: `/t/${team.slug}/meme`,
-    //             title: 'Meme',
-    //         },
-    //     ];
-    // }
 
     return base;
 };
@@ -78,7 +64,7 @@ const TeamNavigationRow = () => {
                     className={cn(
                         buttonVariants({ variant: 'ghost' }),
                         (pathname === item.href ||
-                            item.matches?.includes(pathname ?? '')) &&
+                            (item.matches && item.matches(pathname ?? ''))) &&
                             'bg-neutral-100',
                     )}
                     href={item.href}

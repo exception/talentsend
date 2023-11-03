@@ -13,12 +13,16 @@ export interface FunctionArguments {
     context: ActionContext;
 }
 
+type AppCategory = "notifications" | "analytics";
+
 export interface AppMetadata {
     name: string;
     requiredPlans: TeamPlan[];
     appLogoUrl: string;
     description?: string;
     isNew?: boolean;
+    categories?: AppCategory[];
+    removalText: string;
 }
 
 export abstract class App {

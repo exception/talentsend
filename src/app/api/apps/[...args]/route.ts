@@ -68,9 +68,17 @@ export async function GET(req: Request) {
             return app.install({ req: req, context: { user: session.user, team } });
         } else if (action === "callback") {
             return app.callback({ req: req, context: { user: session.user, team } });
+        } else {
+            if (action && action in app) {
+                // @ts-expect-error
+                const handler = app[action];
+                if (typeof handler === "function") {
+                    return handler({ req, context: { user: session.user, team } });
+                }
+            }
         }
 
-        return NextResponse.redirect(`${APP_URL}/t/${team.slug}/apps?error=Unhandled action.`)
+        return NextResponse.redirect(`${APP_URL}/t/${team.slug}/apps/${appId}?error=Unhandled "${action}" action.`)
     } catch (err) {
         console.error(err);
         return NextResponse.json({ error: err });

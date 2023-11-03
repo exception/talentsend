@@ -26,7 +26,9 @@ export class SlackApp extends IOfferUpdateConsumer<typeof appDataSchema> {
                 name: "Slack",
                 requiredPlans: ["ENTERPRISE", "PREMIUM", 'FREE'],
                 description: "Configure Webhooks and get updates when candidates accept their offers.",
-                isNew: true
+                isNew: true,
+                categories: ["notifications"],
+                removalText: "no longer receive notifications to your selected Slack channel"
             }
         );
     }
@@ -134,5 +136,5 @@ export class SlackApp extends IOfferUpdateConsumer<typeof appDataSchema> {
                 ]
             }),
         });
-    };
+    }
 }
