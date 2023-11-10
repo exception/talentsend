@@ -11,7 +11,6 @@ import {
 import GoogleIcon from '@/components/ui/icons/google-icon';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 // import { GithubIcon } from "lucide-react";
 import { signIn } from 'next-auth/react';
@@ -19,6 +18,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -30,7 +30,6 @@ const SignupForm = () => {
     const next = searchParams?.get('next');
     const [clickedGoogle, setClickedGoogle] = useState(false);
     // const [clickedGithub, setClickedGithub] = useState(false);
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,9 +43,7 @@ const SignupForm = () => {
     useEffect(() => {
         const error = searchParams?.get('error');
         error &&
-            toast({
-                variant: 'destructive',
-                title: 'Something went wrong',
+            toast.error('Something went wrong', {
                 description: error,
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps

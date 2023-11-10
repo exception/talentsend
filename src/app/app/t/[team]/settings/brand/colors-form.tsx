@@ -7,9 +7,9 @@ import { useTeam } from '../../layout';
 import { Form, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import ColorPicker from '@/components/ui/color-picker';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { SaveIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
     primary: z.string().optional(),
@@ -19,7 +19,6 @@ const formSchema = z.object({
 const BrandColorsForm = () => {
     const { team, refetch } = useTeam();
     const defaultBranding = formSchema.parse(team.brand ?? {});
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -29,15 +28,10 @@ const BrandColorsForm = () => {
     const updateAboutMutation = trpc.organization.update.useMutation({
         async onSuccess() {
             await refetch();
-            toast({
-                title: 'Saved!',
-            });
+            toast.success('Saved!');
         },
         onError() {
-            toast({
-                title: 'Failed to save',
-                variant: 'destructive',
-            });
+            toast.error('Failed to save!');
         },
     });
 

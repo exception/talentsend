@@ -1,41 +1,29 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Pencil, SaveIcon, Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { toast } from 'sonner';
 
 const UploadAvatarRow = () => {
-    const { toast } = useToast();
     const { data: session, update } = useSession();
     const [imageContent, setImageContent] = useState<string | undefined>();
     const uploadAvatar = trpc.users.updateAvatar.useMutation({
         async onSuccess() {
             await update();
             if (!imageContent) {
-                toast({
-                    title: 'Removed avatar',
-                    description: 'You have successfully removed your avatar!',
-                });
+                toast.success('Removed team logo');
             } else {
-                toast({
-                    title: 'Updated team logo',
-                    description: 'You have successfully updated your avatar!',
-                });
+                toast.success('Updated team logo');
             }
             setImageContent(undefined);
         },
         onError() {
-            toast({
-                title: 'Upload failed',
-                description:
-                    'Something went wrong while uploading your avatar!',
-                variant: 'destructive',
-            });
+            toast.error('Upload Failed');
         },
     });
 
@@ -73,18 +61,9 @@ const UploadAvatarRow = () => {
                 onDropRejected={(fileRejections) => {
                     const errorCode = fileRejections[0]!.errors[0]!.code;
                     if (errorCode === 'file-too-large') {
-                        toast({
-                            title: 'File not supported!',
-                            description: 'File is too large, max size is 3MB.',
-                            variant: 'destructive',
-                        });
+                        toast.error('File too large!');
                     } else if (errorCode === 'file-invalid-type') {
-                        toast({
-                            title: 'File not supported!',
-                            description:
-                                'This file type is not supported, we only support .jpg and .png.',
-                            variant: 'destructive',
-                        });
+                        toast.error('Invalid file type');
                     }
                 }}
                 maxSize={3_000_000}

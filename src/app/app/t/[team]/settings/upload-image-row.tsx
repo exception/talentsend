@@ -1,38 +1,31 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Pencil, SaveIcon, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useTeam } from '../layout';
+import { toast } from 'sonner';
 
 const UploadImageRow = () => {
-    const { toast } = useToast();
     const { team, refetch } = useTeam();
     const [imageContent, setImageContent] = useState<string | undefined>();
     const uploadAvatar = trpc.organization.uploadImage.useMutation({
         async onSuccess() {
             await refetch();
             if (!imageContent) {
-                toast({
-                    title: 'Removed team logo',
-                });
+                toast.success('Removed team logo');
             } else {
-                toast({
-                    title: 'Updated team logo',
-                });
+                toast.success('Updated team logo');
             }
             setImageContent(undefined);
         },
         onError() {
-            toast({
-                title: 'Upload failed',
+            toast.error('Logo upload failed', {
                 description:
                     "Something went wrong while uploading your team's logo!",
-                variant: 'destructive',
             });
         },
     });
@@ -71,17 +64,13 @@ const UploadImageRow = () => {
                 onDropRejected={(fileRejections) => {
                     const errorCode = fileRejections[0]!.errors[0]!.code;
                     if (errorCode === 'file-too-large') {
-                        toast({
-                            title: 'File not supported!',
+                        toast.error('File not supported!', {
                             description: 'File is too large, max size is 3MB.',
-                            variant: 'destructive',
                         });
                     } else if (errorCode === 'file-invalid-type') {
-                        toast({
-                            title: 'File not supported!',
+                        toast.error('File not supported!', {
                             description:
                                 'This file type is not supported, we only support .jpg and .png.',
-                            variant: 'destructive',
                         });
                     }
                 }}

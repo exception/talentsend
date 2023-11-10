@@ -4,12 +4,12 @@ import Container from '@/components/ui/container';
 import { useTeam } from '../layout';
 import TeamAboutForm from './form';
 import { z } from 'zod';
-import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SaveIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
     mission: z.string().optional(),
@@ -27,20 +27,14 @@ export type AboutFormSchema = z.infer<typeof formSchema>;
 const TeamAboutSettingsPage = () => {
     const { team, refetch } = useTeam();
     const teamAbout = formSchema.parse(team.about ?? {});
-    const { toast } = useToast();
 
     const updateAboutMutation = trpc.organization.update.useMutation({
         async onSuccess() {
             await refetch();
-            toast({
-                title: 'Saved!',
-            });
+            toast.success('Saved!');
         },
         onError() {
-            toast({
-                title: 'Failed to save',
-                variant: 'destructive',
-            });
+            toast.error('Failed to save');
         },
     });
 

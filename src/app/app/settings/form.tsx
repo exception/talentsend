@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SaveIcon } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -26,23 +26,16 @@ const formSchema = z.object({
 
 const AccountSettingsForm = () => {
     const { data: session, update, status } = useSession();
-    const { toast } = useToast();
 
     const updateUser = trpc.users.update.useMutation({
         async onSuccess() {
             await update();
-            toast({
-                title: 'Account settings saved',
-                description:
-                    'We have successfully saved your account settings.',
-            });
+            toast.success('Account Settings Saved');
         },
         onError() {
-            toast({
-                title: 'Account settings failed to save',
+            toast.error('Something went wrong', {
                 description:
                     'Something went wrong while saving your account settings.',
-                variant: 'destructive',
             });
         },
     });

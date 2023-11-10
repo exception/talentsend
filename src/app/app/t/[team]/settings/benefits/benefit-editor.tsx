@@ -12,7 +12,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BenefitPackage } from '@prisma/client';
@@ -22,6 +21,7 @@ import { z } from 'zod';
 import { useTeam } from '../../layout';
 import { useRouter } from 'next/navigation';
 import Container from '@/components/ui/container';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
     name: z.string(),
@@ -49,16 +49,13 @@ export type PackageType = z.infer<typeof formSchema> & {
 };
 
 const BenefitEditor = ({ benefit }: BenefitPageProps) => {
-    const { toast } = useToast();
     const router = useRouter();
     const { team, refetch } = useTeam();
 
     const createNewBenefitMutation =
         trpc.organization.addBenefitPackage.useMutation({
             async onSuccess() {
-                toast({
-                    title: 'Successfully created new benefit package',
-                });
+                toast.success('Successfully created new benefit package');
                 await refetch();
                 router.push(`/t/${team.slug}/settings/benefits`);
             },
@@ -67,9 +64,7 @@ const BenefitEditor = ({ benefit }: BenefitPageProps) => {
     const updateBenefitMutation =
         trpc.organization.updateBenefitPackage.useMutation({
             async onSuccess() {
-                toast({
-                    title: 'Successfully saved  package',
-                });
+                toast.success('Successfully saved package');
                 await refetch();
                 router.push(`/t/${team.slug}/settings/benefits`);
             },

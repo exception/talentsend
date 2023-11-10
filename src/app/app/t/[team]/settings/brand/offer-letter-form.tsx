@@ -13,10 +13,10 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { SaveIcon } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
     introText: z.string().optional(),
@@ -25,7 +25,6 @@ const formSchema = z.object({
 const OfferLetterForm = () => {
     const { team, refetch } = useTeam();
     const defaultBranding = formSchema.parse(team.brand ?? {});
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -35,15 +34,10 @@ const OfferLetterForm = () => {
     const updateAboutMutation = trpc.organization.update.useMutation({
         async onSuccess() {
             await refetch();
-            toast({
-                title: 'Saved!',
-            });
+            toast.success('Saved!');
         },
         onError() {
-            toast({
-                title: 'Failed to save',
-                variant: 'destructive',
-            });
+            toast.error('Failed to save!');
         },
     });
 

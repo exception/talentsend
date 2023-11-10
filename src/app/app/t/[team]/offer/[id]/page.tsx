@@ -19,9 +19,9 @@ import {
 import Link from 'next/link';
 import PublicOfferView from '@/components/views/public-offer';
 import { OfferStatus } from '@prisma/client';
-import { useToast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 import { APP_URL } from '@/lib/constants';
+import { toast } from 'sonner';
 
 interface OfferPageProps {
     params: {
@@ -39,7 +39,6 @@ const canEdit = (status: OfferStatus) => {
 
 const OfferPage = ({ params }: OfferPageProps) => {
     const { team } = useTeam();
-    const { toast } = useToast();
     const [copied, setCopied] = useState(false);
     const { data, isLoading, refetch } = trpc.offers.get.useQuery({
         offerId: params.id,
@@ -75,9 +74,7 @@ const OfferPage = ({ params }: OfferPageProps) => {
                                         await navigator.clipboard.writeText(
                                             `${APP_URL}/offer/${data.id}`,
                                         );
-                                        toast({
-                                            title: 'Copied link to clipboard!',
-                                        });
+                                        toast.info('Copied link to clipboard!');
 
                                         setTimeout(() => {
                                             setCopied(false);

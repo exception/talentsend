@@ -8,13 +8,12 @@ import { useTeam } from '../../layout';
 import { Button } from '@/components/ui/button';
 import EquityForm from './form';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { useToast } from '@/components/ui/use-toast';
 import { EquitySchema } from '@/lib/offer';
 import { Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 const EquityPage = () => {
     const { team, refetch } = useTeam();
-    const { toast } = useToast();
     const equity = EquitySchema.partial().parse(team.equity ?? {});
 
     const form = useForm<z.infer<typeof EquitySchema>>({
@@ -24,9 +23,7 @@ const EquityPage = () => {
 
     const updateMutation = trpc.organization.update.useMutation({
         async onSuccess() {
-            toast({
-                title: 'Saved Equity settings',
-            });
+            toast.success('Saved equity settings!');
             await refetch();
         },
     });

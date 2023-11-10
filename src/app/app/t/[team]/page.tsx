@@ -38,7 +38,7 @@ import {
 import { title } from 'radash';
 import { cn } from '@/lib/utils';
 import { APP_URL } from '@/lib/constants';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 const NoOrganization = () => {
     const { team } = useTeam();
@@ -78,7 +78,6 @@ const CardContent = ({
     isLoading: boolean;
     team: Organization;
 }) => {
-    const { toast } = useToast();
     if (isLoading) return <Skeleton className="w-full h-20" />;
     if (!isLoading && data.length === 0) return <NoOrganization />;
 
@@ -167,9 +166,7 @@ const CardContent = ({
                                         await navigator.clipboard.writeText(
                                             `${APP_URL}/offer/${offer.id}`,
                                         );
-                                        toast({
-                                            title: 'Copied link to clipboard!',
-                                        });
+                                        toast.info('Copied link to clipboard');
                                     }}
                                     variant="outline"
                                     icon={<Clipboard className="h-4 w-4" />}

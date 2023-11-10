@@ -13,7 +13,7 @@ import { useState } from 'react';
 import Modal from '../ui/modal';
 import { Button } from '../ui/button';
 import { trpc } from '@/lib/providers/trpc-provider';
-import { useToast } from '../ui/use-toast';
+import { toast } from 'sonner';
 
 interface PublicOfferViewProps {
     offer: PublicOfferType;
@@ -55,14 +55,12 @@ const PublicOfferView = ({
     const branding = BrandSchema.parse(offer.organization.brand ?? {});
     const [accept, setAccept] = useState(false);
     const [accepted, setAccepted] = useState(false);
-    const { toast } = useToast();
     const isOfferExpired = offer.expiresAt && isPast(offer.expiresAt);
 
     const mutateOffer = trpc.offers.acceptOffer.useMutation({
         onSuccess() {
             setAccept(false);
-            toast({
-                title: 'Offer accepted!',
+            toast.success('Offer accepted!', {
                 description: `We have let the team at ${offer.organization.name} know!`,
             });
             setAccepted(true);
