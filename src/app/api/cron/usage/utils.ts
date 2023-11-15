@@ -30,7 +30,7 @@ export const updateUsage = async () => {
                     id: team.id
                 },
                 data: {
-                    offerCuota: 0
+                    offerCuota: 1
                 }
             })
         })

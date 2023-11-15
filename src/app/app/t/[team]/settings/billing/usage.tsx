@@ -27,7 +27,11 @@ const Usage = () => {
                     <Progress value={0} className="w-full" />
                     <p className="self-end text-neutral-400 text-sm flex items-center">
                         {team.offerCuota} /{' '}
-                        <InfinityIcon className="ml-2 h-4 w-4" />
+                        {team.plan === 'ENTERPRISE' ? (
+                            <InfinityIcon className="ml-2 h-4 w-4" />
+                        ) : (
+                            1
+                        )}
                     </p>
                 </>
             )}

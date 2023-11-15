@@ -82,7 +82,7 @@ model Organization {
   equity                 Json?
   stripeCustomerId       String?  @unique
   plan                   TeamPlan @default(FREE)
-  offerCuota             Int      @default(0)
+  offerCuota             Int      @default(1) // default 1 free
   billingCycleStart      Int?
   yearlyPlan             Boolean?
   billingCycleMonthStart Int?

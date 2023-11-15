@@ -18,7 +18,7 @@ type PremiumPlan = {
 
 export const FREE_PLAN: PremiumPlan = {
     name: "Free",
-    maxCuota: 0,
+    maxCuota: 1,
     type: "FREE",
     exceededCuotaPricing: {
         price: 39,
