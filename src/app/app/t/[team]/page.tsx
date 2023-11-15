@@ -39,6 +39,7 @@ import { title } from 'radash';
 import { cn } from '@/lib/utils';
 import { APP_URL } from '@/lib/constants';
 import { toast } from 'sonner';
+import OnboardingChecks from './onboarding-steps';
 
 const NoOrganization = () => {
     const { team } = useTeam();
@@ -271,6 +272,7 @@ const TeamPage = () => {
 
     return (
         <MaxWidthContainer className="mt-5">
+            <OnboardingChecks />
             <Container
                 title={`${team.name}'s Offers`}
                 renderChild={() => (

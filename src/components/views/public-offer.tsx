@@ -14,6 +14,7 @@ import Modal from '../ui/modal';
 import { Button } from '../ui/button';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { toast } from 'sonner';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
 interface PublicOfferViewProps {
     offer: PublicOfferType;
@@ -109,13 +110,12 @@ const PublicOfferView = ({
                     }}
                 ></div>
                 <MaxWidthContainer className="z-10 flex items-center flex-col space-y-4">
-                    <Image
-                        height={60}
-                        width={60}
-                        className="h-16 w-16"
-                        src={offer.organization.imageUrl!}
-                        alt={offer.organization.name}
-                    />
+                    <Avatar className="h-16 w-16">
+                        <AvatarImage
+                            src={offer.organization.imageUrl!}
+                            alt={offer.organization.name}
+                        />
+                    </Avatar>
                     <div className="rounded-xl bg-white shadow-md lg:p-8 p-4 flex flex-col w-full">
                         <h1 className="text-lg lg:text-3xl font-semibold">
                             Welcome to the team, {offer.targetFirstName}!

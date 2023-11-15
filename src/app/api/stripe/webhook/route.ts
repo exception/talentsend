@@ -1,6 +1,6 @@
 import { prisma } from '@/db';
 import { env } from '@/env.mjs';
-import { getPlanFromPriceId, plans } from '@/lib/plans';
+import { getPlanFromPriceId } from '@/lib/plans';
 import stripe from '@/lib/stripe';
 import { log } from '@/lib/utils';
 import { NextResponse } from 'next/server';
