@@ -77,7 +77,7 @@ export const POST = async (req: Request) => {
                     data: {
                         plan: plan.plan,
                         yearlyPlan: plan.isYearly,
-                        offerCuota: 0 // reset in case 
+                        offerCuota: 1 // reset in case 
                     },
                 });
 
