@@ -20,7 +20,7 @@ const Container = ({
 }: React.PropsWithChildren<Props>) => {
     return (
         <div className={cn('flex flex-col w-full', className)}>
-            <div className="w-full rounded-t-md border border-neutral-300 bg-white p-4 flex justify-between items-center">
+            <div className="w-full rounded-t-md border border-neutral-300 bg-gradient-to-b from-neutral-100 via-neutral-50 to-white p-4 flex justify-between items-center">
                 <div className="flex flex-row space-x-1 items-center">
                     {backUrl && (
                         <Link

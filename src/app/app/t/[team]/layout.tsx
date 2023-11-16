@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation';
 import { inferProcedureOutput } from '@trpc/server';
 import { AppRouter } from '@/server/root';
 import { Crisp } from 'crisp-sdk-web';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export type TeamType = NonNullable<
     inferProcedureOutput<AppRouter['_def']['procedures']['organization']['get']>
@@ -40,6 +41,7 @@ const TeamPageLayout = ({
             enabled: status === 'authenticated',
         },
     );
+    const [parentDivRef] = useAutoAnimate();
 
     const _refetch = async () => {
         await refetch();
@@ -89,7 +91,9 @@ const TeamPageLayout = ({
                     </MaxWidthContainer>
                 </div>
                 <MaxWidthContainer className="!px-0">
-                    {children}
+                    <div ref={parentDivRef} className="flex w-full">
+                        {children}
+                    </div>
                 </MaxWidthContainer>
             </AppLayout>
         </TeamLayoutContext.Provider>

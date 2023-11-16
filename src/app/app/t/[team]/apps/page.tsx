@@ -67,7 +67,7 @@ const AppCard = ({
     }, [hasInstalled, installing, loading]);
 
     return (
-        <div className="rounded-md flex flex-col bg-white p-4 border border-neutral-200 col-span-2 space-y-4">
+        <div className="rounded-md flex flex-col bg-white p-4 border border-neutral-200 col-span-4 lg:col-span-2 space-y-4">
             <div className="flex flex-row items-start justify-between">
                 <div className="flex flex-col space-y-2">
                     <div className="flex flex-row items-center space-x-2">

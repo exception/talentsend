@@ -97,7 +97,7 @@ const PlanSelectRow = () => {
                                     <p className="text-base">
                                         {planData.title} {planData.period}ly
                                     </p>
-                                    <Badge>
+                                    <Badge className="shrink-0 grow-0">
                                         ${planData.price.price} /{' '}
                                         {planData.period}
                                     </Badge>

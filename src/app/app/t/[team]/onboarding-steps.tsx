@@ -16,7 +16,7 @@ const OnboardingChecks = () => {
     if (hasCompletedOnboarding) return <></>;
 
     return (
-        <div className="p-4 bg-white border border-neutral-300 rounded-md mb-5">
+        <div className="p-4 bg-gradient-to-b from-white via-neutral-50 to-neutral-100 border border-neutral-300 rounded-md mb-5">
             <h1 className="text-xl font-semibold">Almost there!</h1>
             <p className="text-sm text-neutral-400">
                 Complete the following steps to ensure your candidates have the
