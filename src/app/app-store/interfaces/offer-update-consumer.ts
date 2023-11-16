@@ -1,4 +1,4 @@
-import { Offer, Organization, Prisma, TeamPlan } from '@prisma/client';
+import { Offer, Organization, Prisma } from '@prisma/client';
 import { ZodObject, z } from 'zod';
 import { App, AppMetadata } from '..';
 

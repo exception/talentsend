@@ -83,7 +83,7 @@ const OfferView = ({ offer }: OfferPageProps) => {
     };
 
     return (
-        <MaxWidthContainer className="mt-5">
+        <MaxWidthContainer className="py-5">
             <Container
                 backUrl={
                     offer

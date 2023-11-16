@@ -7,11 +7,13 @@ import Container from '@/components/ui/container';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
-import InstalledAppData from './app-data';
 import { Button } from '@/components/ui/button';
 import { TrashIcon } from 'lucide-react';
 import Modal from '@/components/ui/modal';
 import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { renderAppChild } from './app-data-registry';
 
 interface Props {
     params: {
@@ -27,6 +29,16 @@ const SpecificAppPage = ({ params }: Props) => {
         appId: params.appId,
         teamId: team.id,
     });
+    const router = useRouter();
+
+    const uninstallMutation = trpc.organization.deleteApp.useMutation({
+        onSuccess() {
+            toast.success(
+                `You have uninstalled the ${app?.metadata.name} app.`,
+            );
+            router.push(`/t/${team.slug}/apps`);
+        },
+    });
 
     const searchParams = useSearchParams();
     const error = searchParams?.get('error');
@@ -35,6 +47,14 @@ const SpecificAppPage = ({ params }: Props) => {
     if (!app) {
         return redirect(`/t/${team.slug}/apps`);
     }
+
+    useEffect(() => {
+        if (installed) {
+            toast.success(
+                `You have successfully installed the ${app.metadata.name} app! You can manage and configure it from this screen.`,
+            );
+        }
+    }, [installed]);
 
     return (
         <>
@@ -54,10 +74,22 @@ const SpecificAppPage = ({ params }: Props) => {
                                 className="w-full"
                                 variant="outline"
                                 onClick={() => setIsRemoving(false)}
+                                disabled={uninstallMutation.isLoading}
                             >
                                 Cancel
                             </Button>
-                            <Button className="w-full">Confirm</Button>
+                            <Button
+                                loading={uninstallMutation.isLoading}
+                                onClick={() =>
+                                    uninstallMutation.mutate({
+                                        appId: params.appId,
+                                        teamId: team.id,
+                                    })
+                                }
+                                className="w-full"
+                            >
+                                Confirm
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -84,22 +116,8 @@ const SpecificAppPage = ({ params }: Props) => {
                         </div>
                     </div>
                 )}
-                {installed && (
-                    <div className="bg-green-50 p-4 border border-green-300 rounded-md">
-                        <div className="space-y-2">
-                            <h3 className="text-base text-green-500 font-medium">
-                                {app.metadata.name} Installed
-                            </h3>
-                            <p className="text-green-400 text-sm">
-                                You have successfully installed the{' '}
-                                {app.metadata.name} app! You can manage and
-                                configure it from this screen.
-                            </p>
-                        </div>
-                    </div>
-                )}
                 {isLoading && <Skeleton className="w-full h-40" />}
-                {!isLoading && data && <InstalledAppData app={data} />}
+                {!isLoading && data && renderAppChild(app.appId, data.appData)}
             </Container>
         </>
     );

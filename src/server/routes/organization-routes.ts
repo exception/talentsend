@@ -349,4 +349,22 @@ export const organizationRoutes = createTRPCRouter({
                 },
             });
         }),
+    deleteApp: protectedProcedure
+        .input(
+            z.object({
+                teamId: z.string(),
+                appId: z.string(),
+            }),
+        )
+        .mutation(({ ctx: { prisma }, input }) => {
+            // todo send invalidate hook maybe?
+            return prisma.installedApp.delete({
+                where: {
+                    appId_organizationId: {
+                        appId: input.appId,
+                        organizationId: input.teamId,
+                    },
+                },
+            });
+        }),
 });

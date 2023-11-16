@@ -12,7 +12,7 @@ const oauthQueryParams = z.object({
 });
 
 const appDataSchema = z.object({
-    url: z.string()
+    url: z.string(),
 });
 
 type AppDataSchema = z.infer<typeof appDataSchema>;
