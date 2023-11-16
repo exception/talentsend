@@ -3,7 +3,6 @@ import { updateUsage } from './utils';
 import { log } from '@/lib/utils';
 
 export async function GET(req: Request) {
-    const body = await req.json();
     if (process.env.VERCEL === '1') {
         const authHeader = req.headers.get('authorization');
         if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
