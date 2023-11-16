@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
-import { updateUsage } from "./utils";
-import { log } from "@/lib/utils";
+import { NextResponse } from 'next/server';
+import { updateUsage } from './utils';
+import { log } from '@/lib/utils';
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     const body = await req.json();
-    if (process.env.VERCEL === "1") {
-        // validate upstash
+    if (process.env.VERCEL === '1') {
+        const authHeader = req.headers.get('authorization');
+        if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+            return new Response('Unauthorized', {
+                status: 401,
+            });
+        }
     }
 
     try {
@@ -14,9 +19,9 @@ export async function POST(req: Request) {
     } catch (error: unknown) {
         await log({
             // @ts-expect-error
-            message: "Usage Cron failed. Error: " + error.message,
-            mention: true
-        })
+            message: 'Usage Cron failed. Error: ' + error.message,
+            mention: true,
+        });
         // @ts-expect-error
         return NextResponse.json({ error: error.messsage });
     }
