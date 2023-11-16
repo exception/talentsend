@@ -6,7 +6,7 @@ import { useTeam } from '../../layout';
 import Container from '@/components/ui/container';
 import { trpc } from '@/lib/providers/trpc-provider';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { TrashIcon } from 'lucide-react';
 import Modal from '@/components/ui/modal';
@@ -117,7 +117,11 @@ const SpecificAppPage = ({ params }: Props) => {
                     </div>
                 )}
                 {isLoading && <Skeleton className="w-full h-40" />}
-                {!isLoading && data && renderAppChild(app.appId, data.appData)}
+                {!isLoading && data && (
+                    <Suspense fallback={<Skeleton className="w-full h-40" />}>
+                        {renderAppChild(app.appId, data.appData)}
+                    </Suspense>
+                )}
             </Container>
         </>
     );

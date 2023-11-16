@@ -213,6 +213,7 @@ export const offerRoutes = createTRPCRouter({
                     organization: {
                         select: {
                             name: true,
+                            slug: true,
                         },
                     },
                     createdBy: {
@@ -232,7 +233,7 @@ export const offerRoutes = createTRPCRouter({
                     target: offerWithTeam?.createdBy?.email,
                     body: {
                         candidateName: offerWithTeam.targetFirstName,
-                        offerLink: `${APP_URL}/offer/${offerWithTeam.id}`,
+                        offerLink: `${APP_URL}/t/${offerWithTeam.organization.slug}/offer/${offerWithTeam.id}`,
                     },
                 });
             }
