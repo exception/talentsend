@@ -29,7 +29,6 @@ const SignupForm = () => {
     const searchParams = useSearchParams();
     const next = searchParams?.get('next');
     const [clickedGoogle, setClickedGoogle] = useState(false);
-    // const [clickedGithub, setClickedGithub] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -96,20 +95,6 @@ const SignupForm = () => {
             >
                 Continue with Google
             </Button>
-            {/* <Button
-        loading={clickedGithub}
-        disabled={!form.formState.isValid || clickedGoogle}
-        size="xl"
-        onClick={() => {
-          setClickedGithub(true);
-          void signIn("github", {
-            ...(next && next.length > 0 ? { callbackUrl: next } : {}),
-          });
-        }}
-        icon={<GithubIcon className="h-4 w-4" />}
-      >
-        Continue with GitHub
-      </Button> */}
             <p className="text-sm text-neutral-500">
                 Already have an account?{' '}
                 <Link href="/signin">

@@ -30,6 +30,7 @@ export const env = createEnv({
 
         LOOPS_API_KEY: z.string().min(1),
         DISCORD_WEBHOOK_URL: z.string().optional(),
+        OPENAI_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -54,5 +55,7 @@ export const env = createEnv({
             process.env.TEAM_PREMIUM_OVERAGE_PRICE_ID,
         ENTERPRISE_MONTHLY: process.env.ENTERPRISE_MONTHLY,
         ENTERPRISE_YEARLY: process.env.ENTERPRISE_YEARLY,
+
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     },
 });

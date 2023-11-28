@@ -15,8 +15,8 @@ interface MetadataProps {
 }
 
 export const makeMetadata = ({
-  title = "TalentSend",
-  description = "TalentSend: TalentSend TalentSend TalentSend",
+  title = "Talentsend",
+  description = "Talentsend",
 }: MetadataProps = {}): Metadata => {
   return {
     title,

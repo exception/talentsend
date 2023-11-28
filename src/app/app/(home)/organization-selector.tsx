@@ -12,6 +12,7 @@ import CreateOrganizationModal from './create-organization-modal';
 import { Organization } from '@prisma/client';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Container from '@/components/ui/container';
 
 const NoOrganization = ({ openModal }: { openModal: () => void }) => {
     return (
@@ -51,7 +52,7 @@ const CardContent = ({
             {data.map((team) => (
                 <Link
                     key={`team-card-${team.id}`}
-                    className="bg-white border border-neutral-200 rounded-md p-4 hover:shadow-sm flex items-center justify-between group"
+                    className="bg-white border border-neutral-200 rounded-md p-4 flex items-center justify-between group border-b-4 hover:border-b-2 border-b-neutral-300"
                     href={`/t/${team.slug}`}
                 >
                     <div className="inline-flex items-center space-x-2">
@@ -89,9 +90,9 @@ const OrganizationSelector = () => {
             <Modal open={modalOpen} setOpen={setModalOpen}>
                 <CreateOrganizationModal setOpen={setModalOpen} />
             </Modal>
-            <div className="flex flex-col">
-                <div className="w-full rounded-t-md border border-neutral-300 bg-white p-4 flex justify-between items-center">
-                    <h2 className="font-semibold text-lg">Your Teams</h2>
+            <Container
+                title="Your Teams"
+                renderChild={() => (
                     <Button
                         onClick={() => setModalOpen(true)}
                         size="sm"
@@ -99,15 +100,14 @@ const OrganizationSelector = () => {
                     >
                         Create a team
                     </Button>
-                </div>
-                <div className="w-full rounded-b-md border border-neutral-300 bg-neutral-50 border-t-0 border-dashed p-4">
-                    <CardContent
-                        openModal={() => setModalOpen(true)}
-                        data={data ?? []}
-                        isLoading={isLoading}
-                    />
-                </div>
-            </div>
+                )}
+            >
+                <CardContent
+                    openModal={() => setModalOpen(true)}
+                    data={data ?? []}
+                    isLoading={isLoading}
+                />
+            </Container>
         </>
     );
 };

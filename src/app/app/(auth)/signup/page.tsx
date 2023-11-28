@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { makeMetadata } from '@/lib/utils';
 
 export const metadata = makeMetadata({
-    title: 'Sign up to TalentSend',
+    title: 'Sign up to Talentsend',
 });
 
 const SignupPage = () => {
@@ -14,22 +14,13 @@ const SignupPage = () => {
         <div className="flex flex-col space-y-2 z-10 text-center w-full max-w-md mx-auto mb-auto">
             <Card>
                 <CardHeader className="pb-4 space-y-2">
-                    <CardTitle>Create your TalentSend account</CardTitle>
-                    <p className="text-sm font-normal text-neutral-400">
-                        TalentSend TalentSend TalentSend TalentSend.
-                    </p>
+                    <CardTitle>Create your Talentsend account</CardTitle>
                 </CardHeader>
                 <Separator />
                 <CardContent className="flex flex-col items-center gap-y-2 pt-4">
                     <Suspense fallback={<Skeleton className="h-10 w-full" />}>
                         <SignupForm />
                     </Suspense>
-                    {/* <p className="text-sm text-card-foreground">
-                    Don&apos;t have an account?{' '}
-                    <Link href="/register">
-                        <strong>Sign up</strong>
-                    </Link>
-                </p> */}
                 </CardContent>
             </Card>
             <p className="text-xs text-neutral-400">

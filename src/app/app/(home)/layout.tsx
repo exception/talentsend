@@ -10,11 +10,6 @@ const HomeLayout = ({ children }: React.PropsWithChildren<unknown>) => {
 
     return (
         <AppLayout>
-            {/* <div className="py-4 bg-white border-b border-b-neutral-200">
-                <MaxWidthContainer className="flex justify-between items-center">
-                    <Greeter />
-                </MaxWidthContainer>
-            </div> */}
             <MaxWidthContainer>
                 {status === 'loading' ? (
                     <Skeleton className="mt-10 h-40 w-full rounded-md" />

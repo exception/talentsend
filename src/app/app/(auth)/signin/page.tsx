@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { makeMetadata } from '@/lib/utils';
 
 export const metadata = makeMetadata({
-    title: 'Sign in to TalentSend',
+    title: 'Sign in to Talentsend',
 });
 
 const LoginPage = () => {
@@ -14,7 +14,7 @@ const LoginPage = () => {
         <div className="flex flex-col space-y-2 z-10 text-center w-full max-w-md mx-auto mb-auto">
             <Card>
                 <CardHeader className="pb-4">
-                    <CardTitle>Sign in to TalentSend</CardTitle>
+                    <CardTitle>Sign in to Talentsend</CardTitle>
                 </CardHeader>
                 <Separator />
                 <CardContent className="flex flex-col items-center gap-y-2 pt-4">

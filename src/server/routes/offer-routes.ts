@@ -185,7 +185,7 @@ export const offerRoutes = createTRPCRouter({
                         }),
                     ]);
 
-                    return { ..._offer, status: "PUBLISHED" } // fake to avoid another prisma query
+                    return { ..._offer, status: 'PUBLISHED' }; // fake to avoid another prisma query
                 }
             }
 
@@ -238,7 +238,10 @@ export const offerRoutes = createTRPCRouter({
                 });
             }
 
-            void handleAppsOfferAccept(offerWithTeam, offerWithTeam.organizationId);
+            void handleAppsOfferAccept(
+                offerWithTeam,
+                offerWithTeam.organizationId,
+            );
 
             void sendEmail({
                 type: 'OFFER_ACCEPTED_CANDIDATE',

@@ -1,7 +1,6 @@
 import { OfferSchema } from '@/lib/offer';
 import { z } from 'zod';
 import MaxWidthContainer from '../app/max-width-container';
-import Image from 'next/image';
 import Link from 'next/link';
 import { format, isPast } from 'date-fns';
 import CompensationRow from './compensation-row';
